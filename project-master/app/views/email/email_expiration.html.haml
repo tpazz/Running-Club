@@ -1,0 +1,65 @@
+!!!
+-# Certificate expiration view where each approved coach's certificate expirations
+  are displayed
+%html{:lang => "en"}
+  %head
+  %title Certificate expiration
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    -# Logout navbar
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+
+    %br
+    %br
+    %br
+    %h1{style: 'text-align:center'} Coach certificates
+    .signup-form-exp
+      - @all_coaches.each do |user|
+      - @coach = Coach.where(:user_id => user.id).first
+        = simple_form_for :recipent, url: reminder_sent_path, method: :post do |f|
+          %tr
+            %td
+            = f.label :expiration, user.first_name, :style => "font-size:25px"
+            = f.label :expiration, user.last_name, :style => "font-size:25px"
+            %hr/
+            = f.label :expiration, "Qualifications:", :style => "font-size:20px;font-weight:bold"
+            %br
+            -# Variable that calls a helper method to return a list of days until expiration when
+              supplied with expiration dates from certificates
+            - @expiration = []
+            - exp_list(@coach).each do |document|
+              -# Calls helper method that returns certificate name and associated expiration date
+              - exp = qualifications(document.expiration)
+              - days = exp.to_s
+              - @expiration += [days]
+              #{document.title} - expires in
+              - if exp >= 31
+                = f.label :expiration, days, :style => "font-size:18px;color:green"
+                days
+              - elsif (exp > 1) && (exp < 31)
+                = f.label :expiration, days, :style => "font-size:18px;color:orange"
+                days
+              - elsif (exp == 1)
+                = f.label :expiration, "1 day", :style => "font-size:18px;color:red"
+              - elsif exp < 1
+                = f.label :expiration, "Expired", :style => "font-size:18px;color:red"
+              = "(" + document.expiration.to_s + ")"
+              %br
+            - if @expiration.empty?
+              %i No certificates
+            %p
+            -# Hidden fields to pass expiration, coach and user_id to controller for next view
+            = f.hidden_field :coach, :value => @coach.id
+            = f.hidden_field :user_id, :value => user.id
+            = f.button :submit, "Email reminder", id: user.first_name + user.last_name, :style => "background-color:black;color:white"

@@ -1,0 +1,71 @@
+/ Sign Up page, visible to visitors
+!!!
+%html{:lang => "en"}
+  / Head
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Title
+  %title Create account
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  / Body
+  %body
+    .container
+      .p-3
+      / Link to the Home page
+      = link_to "◄ Return to Home page", "/", :class => "btn btn-primary rounded-pill"
+
+    .signup-form
+
+      = simple_form_for(@user, url: '/signup') do |f|
+        %h2 Sign up
+        %hr/
+        / First Name
+        %div
+          = f.input :first_name, autofocus: true
+        / Last Name
+        %div
+          = f.input :last_name
+        / E-mail
+        %div
+          = f.input :email
+        %div
+          = f.input :s_email, label: "Secondary Email [Optional]"
+        / Password
+        %div
+          - if @validatable
+            %i
+              (#{@minimum_password_length} characters minimum)
+          = f.input :password, autocomplete: "off"
+          = f.input :password_confirmation, autocomplete: "off"
+
+
+        = f.simple_fields_for :parent do |parent|
+          = parent.error_notification
+          = parent.error_notification message: parent.object.errors[:base].to_sentence if parent.object.errors[:base].present?
+          %div
+            / Address
+            = parent.input :address
+          %div
+            / postcode
+            = parent.input :postcode
+          %div
+            / prime_mobile
+            = parent.input :prime_mobile
+          %div
+            / Home Number
+            = parent.input :home_number, label: "Home Number [Optional]"
+            %p
+
+            / Add Phone Numbers, optional
+            = parent.simple_fields_for :phone_number do |number|
+              .bg-primary
+                = link_to_add_association 'Add Phone Number', parent, :phone_number, partial: 'signup/phone_number_fields'
+        %br/
+        = f.button :submit, "Sign up", :style => "color:white"
+      .text-center
+        Already have an account?
+        %a{:href => "/login"} Sign In here

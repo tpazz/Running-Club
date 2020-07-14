@@ -1,0 +1,80 @@
+/ View Children payments page, used to see the payment status for each child
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Reset Payment
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application"
+  = csrf_meta_tags
+  %body
+    / Navigation, always fixed at the top of the page
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only show the links to pages approved for each type of user
+            =render partial: 'navbar'
+      /End of Navigation
+    /Section for users
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-5
+            / Heading
+            %h1 All Children
+            .table-responsive
+              / Creating a table
+              %table#users-table.table.table-hover.table-striped.table-light
+                %thead.thead-dark
+                  / Columns with titles
+                  %tr
+                    %th First Name
+                    %th Last Name
+                    %th Gender
+                    %th Date of birth
+                    %th Paid
+                    / Also align text in the center
+                    %th.text-center Mark as paid
+                    / Not visible on the page
+                    %th.invisible Id
+                %tbody
+                  - @children.each do |child|
+                    / Rows with details stored in the database
+                    %tr
+                      %td= child.first_name
+                      %td= child.last_name
+                      %td= Db_queries.gender(child.gender)
+                      %td= child.date_of_birth
+                      %td= child.paid
+                      %td.text-center
+                        / If the child has not paid, use the thickbox to update if they did
+                        -if child.paid == false
+                          %input.text-center{ data: { remote: true, url: view_children_payments_child_path(child), method: :patch }, type: :checkbox, name: 'payment', value: 'in' }
+                      / Not visible on the page
+                      %td.invisible{:name => "id"}= child.id
+            / Update in the database by a button click
+            %a#s-btn.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "/view_children_payments"} Change payments status
+    / End of section
+
+    / Footer
+    = render "layouts/footer"
+    / End of footer

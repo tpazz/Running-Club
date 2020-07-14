@@ -1,0 +1,14 @@
+/ Show page for a role
+/ Notice message
+%p#notice= notice
+
+/ Role name
+%p
+  %b Role name:
+  = @role.role_name
+
+/ Link to the edit page
+= link_to 'Edit', edit_role_path(@role)
+\|
+/ Option to go back
+= link_to 'Back', roles_path

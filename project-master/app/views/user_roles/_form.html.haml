@@ -1,0 +1,16 @@
+/ Form used to add or edit a role for a user
+-# frozen_string_literal: true
+= simple_form_for(@user_role) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  / Input filds
+  .form-inputs
+    / The User
+    = f.association :user
+    / The roles
+    = f.association :role
+
+  / Submit changes with a button click
+  .form-actions
+    = f.button :submit, {:style => "text-transform: uppercase"}

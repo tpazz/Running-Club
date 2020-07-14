@@ -1,0 +1,18 @@
+/ Show page for a document
+/ Notice message displayed
+%p#notice= notice
+
+/ Coach
+%p
+  %b Coach:
+  = @document.coach
+/ Attached file
+%p
+  %b Attachment:
+  = @document.attachment
+
+/ Link to the edit page
+= link_to 'Edit', edit_document_path(@document)
+\|
+/ Link to go back
+= link_to 'Back', documents_path

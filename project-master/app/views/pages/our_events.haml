@@ -1,0 +1,94 @@
+/ Our events page
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Events
+  = favicon_link_tag 'favicon.ico'
+  / Link to all style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, always fixed at the top of the page
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        / Brand
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of Navigation
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only display links to pages that are approved for each type of user
+            =render partial: 'navbar'
+      /End of Navigation
+      /Content for Adding Events
+      .container
+        .align-items-center
+          .p-5
+            / Heading
+            %h2.display-4 Add Events
+            .container
+              / Creating a form
+              %form
+                = form_tag '/signup', :method => :post do
+                  / Title
+                  .form-group
+                    %input#usr.form-control{:type => "text", :id => "name", :placeholder => "Event title...", :name => "title"}/
+                  / Date
+                  .form-group
+                    %input#usr.form-control{:type => "date", :id => "date", :name => "date"}/
+                  / Details
+                  .form-group
+                    %textarea#comment.form-control{:rows => "5", :id => "comment", :placeholder => "Event details...", :name => "details"}
+                  / Part of a Series, boolean value
+                  .form-group
+                    = select_tag :series,  options_for_select(["True", "False"]), {:class => 'form-control', :id => "select"}
+                  / Button to add the event
+                  .form-group
+                    .col.text-center
+                      %button.btn.btn-dark.btn-xl.rounded-pill.mt-5{:type => "submit"} Add event
+    / End of section
+    /Section for Editing Events
+    %section
+      .container
+        .align-items-center
+          .p-5
+            / Heading
+            %h2.display-4 Edit Events
+            / Creating a table
+            %table.table
+              %thead.thead-dark
+                / Columns with titles
+                %tr
+                  %th{:scope => "col"} List Of Events ▼
+                  %th#middle{:scope => "col"} Edit ▼
+                  %th#middle{:scope => "col"} Delete ▼
+              %tbody
+                / For each event display information from the database as row
+                - events_all = Event.all
+                - events_all.each do |events|
+                  %tr
+                    %td= events.name
+                    / Link to edit page
+                    %td= link_to 'Edit', edit_event_path(events), id: events.id, :class => "btn btn-secondary btn-xl rounded-pill"
+                    %td
+                      / Delete option
+                      %button.btn.btn-danger.btn-xl.rounded-pill.mt-5#btn-ev{:type => "button", :onclick => "return confirm('Are you sure you want to delete this event？')"} Delete
+    / End of section
+    / Footer
+    = render "layouts/footer"
+    / End of footer

@@ -1,0 +1,18 @@
+/ Show page for a phone number
+/ Notice message
+%p#notice= notice
+
+/ Parent
+%p
+  %b Parent:
+  = @phone_number.parent
+/ Phone number
+%p
+  %b Phone number:
+  = @phone_number.phone_number
+
+/ Link to the edit page
+= link_to 'Edit', edit_phone_number_path(@phone_number)
+\|
+/ Option to go back
+= link_to 'Back', phone_numbers_path

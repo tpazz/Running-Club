@@ -1,0 +1,28 @@
+-# Mail body for sending email to coaches to remind them of their certificate
+  expiration(s) - if < 30 days until expiration, reminder will be in bold text
+
+%p Hi #{@name}, you have been sent a reminder for your certificate expiration:
+
+- expiration = []
+- exp_list(@coach).each do |doc|
+  - exp = qualifications(doc.expiration)
+  - days = exp.to_s
+  - title = doc.title
+  - expiration.push(days)
+  - if exp == 0
+    %strong Your #{title} expired today.
+  - elsif exp < -1
+    %strong Your #{title} expired #{days}.abs days ago.
+  - elsif exp == -1
+    %strong Your #{title} expired #{days}.abs day ago.
+  - elsif exp == 1
+    %strong Your #{title} expires in #{days} day.
+  - elsif (exp > 1) && (exp <= 30)
+    %strong Your #{title} expires in #{days} days.
+  - elsif exp > 30
+    Your #{title} expires in #{days} days.
+  %br
+- if expiration.empty?
+  %strong You dont have any certificates.
+
+%p Please review accordingly.

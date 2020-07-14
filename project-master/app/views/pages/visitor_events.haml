@@ -1,0 +1,52 @@
+/ Events page, it is a public page, accessible by users and nonusers
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Events
+  = favicon_link_tag 'favicon.ico'
+  / Link to style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, always fixed at the top of the page
+    = render "schedules/top_navbar"
+    / End of navigation
+    / Display Header
+    = render "layouts/header"
+    / End of Header
+
+    /Section for Displaying Events
+    %section
+      =render partial: 'schedules/navbar_s'
+      .container
+        .align-items-center
+          .p-5
+            / Heading
+            %h2.display-4 Take a look at our events...
+            / Create a table
+            %table.table
+              %thead.thead-dark
+                / Colimns with titles
+                %tr
+                  %th{:scope => "col"} Name ▼
+                  %th{:scope => "col"} Date ▼
+                  %th{:scope => "col"} Details ▼
+                  %th{:scope => "col"} Series ▼
+              %tbody
+                / For each event
+                - events_all = Event.all
+                - events_all.each do |events|
+                  / Rows with details from the database
+                  %tr
+                    %td{:style => "font-weight: 700"}= events.name
+                    %td= events.date
+                    %td= events.details
+                    %td= events.series ? "Yes" : "No"
+
+    / End of section
+    / Footer
+    = render "layouts/footer"
+    / End of footer

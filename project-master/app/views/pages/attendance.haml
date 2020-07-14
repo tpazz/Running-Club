@@ -1,0 +1,113 @@
+/ Attendance Page
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Attendance
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, fiex at the top of the page always
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only show the links to pages approved for each type of user
+            =render partial: 'navbar'
+      /End of Navigation
+    %section
+      / Function used to check a user's roles
+      - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+      .container
+        .items-center
+          .p-4
+          %h3.display-4 Attendance
+          / Button which will make the print option possible
+          %button{:class => "btn btn-primary rounded-pill", :onclick => "myFunction()"} PRINT ATTENDANCE
+          .p-3
+            / Taking today's date
+            -today=String(Time.now.strftime("%Y-%m-%d"))
+            .table-responsive
+              / Creating a table for each schedule in the database
+              - @schedules.each do |schedule|
+                .p-2
+                / Show all the attendances that were in the past or today
+                - if String(schedule.start_time)[0..9] <= today
+                  %h1{:style => "color:  " + schedule.group.group_colour}=schedule.group.group_name
+                  %h4="Start Time: " + String(schedule.start_time)[0..15]
+                  %table.table.table-hover
+                    %thead.thead-dark
+                      / Columns with titles
+                      %tr
+                        %th{:scope => "col"} First Name ▼
+                        %th{:scope => "col"} Last Name ▼
+                        %th{:scope => "col"} Group ▼
+                        %th{:scope => "col"} IN ▼
+                        %th{:scope => "col"} OUT ▼
+                        / Only users that are not Volunteers can see these fields
+                        - if !Db_queries.check_list_user_roles_smart(user_roles, ['Volunteer'])
+                          %th{:scope => "col"} Emergency Contact ▼
+                          %th{:scope => "col"} Photograph ▼
+                          %th{:scope => "col"} Medical Details ▼
+                        / Not displaying on the page
+                        %th.invisible{:scope => "col"} ID ▼
+                    %tbody
+                      / Rows for each table
+                      - children = schedule.group.child.eager_load(:emergency_contact, :parent => :phone_number)
+                      - children.each do |child|
+                        %tr
+                          %td= child.first_name
+                          %td= child.last_name
+                          %td= child.group.group_name
+                          %td#middle
+                            .form-check
+                              / There are two options which can be updated in the database
+                              -# Add for each box:' , checked: #{ch}' so in the db we know if it is clicked
+                              - attended = Attendance.where(child_id: child.id, schedule_id: schedule.id).first
+                              - attended = attended.blank? ? 0 : attended.attended
+                              / If the child has come to the schedule, store in the database by clicking on the thickbox below 'IN'
+                              %input#blankCheckbox.form-check-input.position-static{ data: { remote: true, url: mark_attendance_child_path(child, schedule_id: schedule.id), method: :patch }, type: :checkbox, checked: attended > 0 , name: 'attendance', value: 'in', id: child.first_name + 'in'}
+                          %td#middle
+                            .form-check
+                              / If the child was picked up, store in the database by clicking on the thickbox below 'OUT'
+                              %input#blankCheckbox.form-check-input.position-static{ data: { remote: true, url: mark_attendance_child_path(child, schedule_id: schedule.id), method: :patch }, type: :checkbox, checked: attended > 1, name: 'attendance', value: 'out', id: child.first_name + 'out'}
+                          / Only users that are not Volunteers can see these fields
+                          / You can click on the emergency contact button to see phone numbers and the relationship between the adult and the child
+                          / It is specific to each child
+                          - if !Db_queries.check_list_user_roles_smart(user_roles, ['Volunteer'])
+                            %td
+                              %button.hide.btn-indigo.s-0{ data: { show_phone_number_for: child.id } } Get contact
+                              -Db_queries.children_all_emergency_phones(child).each do |phone|
+                                %p.phone-number{ class: "phone-number-for-#{child.id}" }
+                                  #{phone.phone}
+                                  #{phone.relation}
+                            / Display the photo permission details
+                            %td= Db_queries.photo_permission(child.photo)
+                            / Display the medical details
+                            %td= child.medical_issues
+                          / Not displaying on the page
+                          %td.invisible{:name => "id"}= child.id
+          / Submit changes when clicking a button
+          %a#s-btn.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "/post_signin"} Submit
+    /End Of Section
+    / Footer
+    = render "layouts/footer"
+    / End of Footer

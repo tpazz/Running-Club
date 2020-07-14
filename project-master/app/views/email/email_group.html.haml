@@ -1,0 +1,42 @@
+!!!
+-# Email groups view where a list of all groups are listed
+%html{:lang => "en"}
+  %head
+  %title Groups
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    -# Logout navbar
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    %br
+    %br
+    %br
+    %h1{style: 'text-align:center'} Email groups
+    .signup-form-group
+      - @all_groups.each do |group|
+        - @colour = group.group_colour
+        = simple_form_for :group_email, url: message_group_path do |f|
+          %tbody
+            %tr
+              %td
+              -# Message selected group
+              -# Hidden fields to pass group_name and group_id to controller for next view
+              = f.hidden_field :group_name, :value => group.group_name
+              = f.hidden_field :group_id, :value => group.id
+              = f.button :submit, group.group_name, id: group.group_name, name: "group", :style => "background-color:#@colour;color:white"
+    .signup-form-allgroup
+      -# Message all groups
+      = simple_form_for :group_email, url: message_group_path do |f|
+        -# Hidden field to pass All groups to controller for next view
+        = f.hidden_field :group_name, :value => "All"
+        = f.button :submit, "Email All Groups", id: "all_groups", name: "all", :style => "background-color:black;color:white"

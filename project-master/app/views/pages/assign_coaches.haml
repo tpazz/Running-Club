@@ -1,0 +1,67 @@
+/ Assign coaches to a session page
+!!!
+%html{:lang => "en"}
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style ad javascript files needed
+  %title Assign coaches
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, fixed at the top
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display the links to the pages approved for each type of user
+            =render partial: 'pages/navbar'
+      /End of Navigation
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-3
+            %h3 Assign run leaders and volunteers to schedules
+            .table-responsive
+              / Creating a table
+              %table#users-table.table.table-hover.table-striped
+                %thead.thead-dark
+                  / Columns with titles
+                  %tr
+                    %th Schedule
+                    %th Team Leader already assigned
+                    %th Volunteers already assigned
+                    %th Assign as Team Leaders
+                    %th Assign as Volunteers
+                  %tbody
+                    / Rows with the information stored in the database
+                    - @schedules = Schedule.all
+                    - @schedules.each do |schedule|
+                      %tr
+                        %td= schedule
+                        %td=select_tag :assigned_coaches,  options_for_select( User.where(id: Coach.where(id: SessionHelper.where(:schedule_id => schedule.id, :team_leader => true).pluck(:coach_id)).pluck(:user_id)))
+                        %td=select_tag :assigned_coaches,  options_for_select( User.where(id: Coach.where(id: SessionHelper.where(:schedule_id => schedule.id, :team_leader => false).pluck(:coach_id)).pluck(:user_id)))
+                        %td=select_tag :team_leaders,  options_from_collection_for_select(Db_queries.coaches_all_users(), "id", "first_name"), { data: { remote: true, url: assign_coaches_schedule_path(schedule), method: :patch } }
+                        %td=select_tag :volunteer,   options_from_collection_for_select(Db_queries.coaches_all_users(), "id", "first_name"), { data: { remote: true, url: assign_coaches_schedule_path(schedule), method: :patch } }
+                        %td.invisible{:name => "id"}= schedule.id
+            / Submit changes when clicking a button
+            %a#s-btn.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "assign_coaches"} Assign
+/ Footer
+= render "layouts/footer"
+/ End of Footer

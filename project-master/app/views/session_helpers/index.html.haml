@@ -1,0 +1,36 @@
+/ All session helpers
+%h1 Listing session_helpers
+
+/ Creating a table
+%table
+  %thead
+    / Columns with titles
+    %tr
+      %th Schedule
+      %th Coach
+      / Show link
+      %th
+      / Edit link
+      %th
+      / Destroy link
+      %th
+
+  %tbody
+    / For each session helper
+    - @session_helpers.each do |session_helper|
+      %tr
+        / Schedule
+        %td= session_helper.schedule
+        / Coach
+        %td= session_helper.coach
+        / Link to the show page
+        %td= link_to 'Show', session_helper
+        / Link to the edit page
+        %td= link_to 'Edit', edit_session_helper_path(session_helper)
+        / Option to destroy
+        %td= link_to 'Destroy', session_helper, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+/ Link to add a new session helper page
+= link_to 'New Session helper', new_session_helper_path

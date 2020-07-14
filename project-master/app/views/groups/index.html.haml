@@ -1,0 +1,123 @@
+/ Groups page
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Groups
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only display the links to pages approved for each type of user
+            =render partial: 'pages/navbar'
+    /End of Navigation
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            / Function used to check the current user's roles
+            - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+            / If the user is a Member Secretary, display the create a new group button
+            - if !Db_queries.check_list_user_roles_smart(user_roles, ['Member Secretary'])
+              %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5#btn-user{:href => "groups/new"} Create New Group
+            .p-3
+            / Heading
+            %h3 Listing active groups
+            .table-responsive
+              / Creating a table
+              %table#users-table.table.table-hover.table-striped.table-dark
+                %thead.thead-light
+                  / Columns with titles
+                  %tr
+                    %th ID
+                    %th Group name
+                    %th Make group inactive
+                    %th
+                    / If a user has the permission to edit a group, this field will be displayed
+                    - if can? :update, Group
+                      %th
+                  %tbody
+                    / For each group
+                    - Db_queries.active_groups().each do |group|
+                      %tr
+                        / Group ID, having the background set according to the group's name
+                        %td{:style => "background-color:  " + group.group_colour, :name => "id"}= group.id
+                        / Group name, having the background set according to the group's name
+                        %td{:style => "background-color:  " + group.group_colour}= group.group_name
+                        / Option to change a group to an inactive group
+                        %td#middle
+                          .form-check
+                            %input#blankCheckbox.form-check-input.position-static{ data: {confirm: 'Setting a group to inactive will move all its members to inactive. Do you want to proceed?', remote: true, url: make_inactive_group_path(group), method: :patch }, type: :checkbox, name: 'inactive'}
+                        / Link to the show page
+                        %td= link_to 'Show', group, id: group.group_name + 's', :class => "btn btn-outline-light rounded-pill"
+                        / If a user has the permission to edit a group, this field will be displayed
+                        - if can? :update, Group
+                          %td= link_to 'Edit', edit_group_path(group), id: group.group_name + 'e', :class => "btn btn-primary rounded-pill"
+              / All the inactive groups
+              %h3 Listing inactive groups
+              .table-responsive
+                %table#users-table.table.table-hover.table-striped.table-dark
+                  %thead.thead-light
+                    / Columns with titles
+                    %tr
+                      %th ID
+                      %th Group name
+                      %th Make group active
+                      %th
+                      / If a user has the permission to edit a group, this field will be displayed
+                      - if can? :update, Group
+                        %th
+                      / If a user has the permission to delete a group, this field will be displayed
+                      - if can? :destroy, Group
+                        %th
+                    %tbody
+                      / For each inactive group
+                      - Db_queries.inactive_groups().each do |group|
+                        %tr
+                          / Group ID, having the background set according to the group's name
+                          %td{:style => "background-color:  " + group.group_colour}= group.id
+                          / Group name, having the background set according to the group's name
+                          %td{:style => "background-color:  " + group.group_colour}= group.group_name
+                          / Making the group active again
+                          %td#middle
+                            .form-check
+                              %input#blankCheckbox.form-check-input.position-static{ data: { remote: true, url: make_active_group_path(group), method: :patch }, type: :checkbox, name: 'active'}
+                          / Link to the show page
+                          %td= link_to 'Show', group, :class => "btn btn-outline-light rounded-pill"
+                          / If a user has the permission to edit a group, this field will be displayed
+                          - if can? :update, Group
+                            %td= link_to 'Edit', edit_group_path(group), :class => "btn btn-primary rounded-pill"
+                            / If a user has the permission to delete a group, this field will be displayed
+                          - if can? :destroy, Group
+                            %td= link_to 'Destroy', group, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-danger rounded-pill"
+
+              %br
+              / Submit changes with a button click
+              %a#s-btn.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "/groups"} Submit
+
+
+/ Footer
+= render "layouts/footer"
+/ End of Footer

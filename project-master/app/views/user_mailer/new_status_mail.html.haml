@@ -1,0 +1,12 @@
+-# Mail body for sending email to coaches of their application status
+
+%p Hi #{@name}, new message recieved from HVH:
+
+- if (@status == "Volunteer") or (@status == "Run Leader")
+  Your application for
+  %strong #{@status}
+  has been accepted.
+- else
+  Your application has been
+  %strong #{@status}.
+  %p Please review accordingly.

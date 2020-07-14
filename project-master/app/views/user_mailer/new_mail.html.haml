@@ -1,0 +1,8 @@
+-# Mail body for sending email to system owner via contact us page -
+  simple_format is used to preserve white-space and breaks
+
+%p Hi Rachel, new message recieved from #{@name}:
+
+= simple_format @message
+
+%p To reply to this message, please use: #{@mail}

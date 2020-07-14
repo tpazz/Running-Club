@@ -1,0 +1,6 @@
+-# Mail body for sending email to a user - simple_format is used to preserve
+  white-space and breaks
+
+%p Hi #{@name}, new message recieved from HVH:
+
+= simple_format @message

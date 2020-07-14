@@ -1,0 +1,20 @@
+-# Form for a parent
+-# frozen_string_literal: true
+= simple_form_for(@parent) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  -# Input fields
+  .form-inputs
+    -# Address
+    = f.input :address
+    -# Postcode
+    = f.input :postcode
+    -# Home number
+    = f.input :home_number
+    -# Prime phone number
+    = f.input :prime_mobile
+
+  -# Submit changes with a button click
+  .form-actions
+    = f.button :submit

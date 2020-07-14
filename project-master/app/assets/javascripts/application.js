@@ -1,0 +1,13 @@
+//= require jquery
+//= require jquery_ujs
+//= require bootstrap
+//= require bootstrap.min
+//= require bootstrap.bundle
+//= require bootstrap.bundle.min
+//= require_tree .
+//= require jquery-2.2.4.min
+//= require bootstrap-sprockets
+//= require ajax_modal
+//= require check.js
+//= require reveal_buttons.js
+//= require cocoon

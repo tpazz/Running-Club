@@ -1,0 +1,60 @@
+/ Page to add a new child
+!!!
+%html{:lang => "en"}
+  %head
+  %title Running Club
+  = favicon_link_tag 'favicon.ico'
+  / Linking all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, fixed at the top of the page
+    / Contains the brand name and the log out button
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of the navigation fixed at the top
+    / Display the header using render
+    = render "layouts/header"
+    / Start of a section for the navigation bar
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display only the links to pages approved for the user's role
+            =render partial: 'pages/navbar'
+        / End of Navigation
+        / Page content specific to a child
+      .container
+        / Heading
+        %h1{:id => "title"}
+          Add Child
+        - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+        / As a Head Admin you can see specific fieldsfor adding children
+        / They are creted in the form, from this folder
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin'])
+          = render 'form'
+        / As a parent, you can see specific fields for adding your children
+        / They are creted in the page add_child from the page folder
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Parent'])
+          = render 'pages/add_child'
+        .p-3
+        / Link Back to the right page based on the user type
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Parent'])
+          = link_to 'Back', my_children_path, {:style => "color: black", :class => "btn"}
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Member Secretary'])
+          = link_to 'Back', children_path, {:style => "color: black", :class => "btn"}
+        .p-3
+  / Footer
+  = render 'layouts/footer'
+  / End of Footer

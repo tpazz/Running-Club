@@ -1,0 +1,44 @@
+/ Page containing the body content from the Home page
+/ Welcome to our page Section
+%section
+  .container
+    .row.align-items-center
+      .col-lg-6.order-lg-2
+        .p-5
+          %img.img-fluid.rounded-circle
+          = image_tag("kids.jpg", :class => "rounded-circle")
+      .col-lg-6.order-lg-1
+        .p-5
+          %h2.display-4 Welcome!
+          %p We are a junior running club operating in the Hope Valley for junior runners aged 8–16 years. We aim to make the most of our wonderful outdoor surroundings to encourage our members to enjoy exercising, develop their fitness and perhaps participate in running events.
+          %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "visitor_events"} Events
+/ End of section
+/ Section about Club Rules
+%section
+  .container
+    .row.align-items-center
+      .col-lg-6
+        .p-5
+          %img.img-fluid.rounded-circle
+          = image_tag("photo.jpg", :class => "rounded-circle")
+      .col-lg-6
+        .p-5
+          %h2.display-4 Club Rules
+          %strong Come prepared for the weather conditions!
+          %p Sessions usually take place on Thursday evenings during school term times from 6.00pm to 7.00pm.  We usually meet on the playing field at Hope Sports Ground, though sometimes meet at "away venues" so we can explore other areas of the Hope Valley. Details of sessions are shown on the website and reminder emails are sent when venues change.
+          %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "https://drive.google.com/file/d/14xI31VNhpab8uCZDJ8N56cxL1BN3V7gF/view"} Agree to and abide by the Code of conduct
+/ End of section
+/ Section about 'About us...'
+%section
+  .container
+    .row.align-items-center
+      .col-lg-6.order-lg-2
+        .p-5
+          %img.img-fluid.rounded-circle
+          = image_tag("group.jpg", :class => "rounded-circle")
+      .col-lg-6.order-lg-1
+        .p-5
+          %h2.display-4 About us...
+          %p We have several volunteer coaches/run leaders who run, race and/or orienteer themselves and who hope to introduce young runners to the sport. We also welcome offers of support from parents to support the club by running with groups and/or through other administrative roles.
+          %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "/schedule"} Schedule
+/ End of section

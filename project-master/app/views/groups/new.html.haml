@@ -1,0 +1,52 @@
+/ New group page
+!!!
+%html{:lang => "en"}
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = javascript_include_tag "application", media: "color"
+  = csrf_meta_tags
+  %body
+    / Navigation
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only show the links to pages approved for each type of user
+            =render partial: 'pages/navbar'
+    /End of Navigation
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-5
+            / Heading
+            %h3 Create New Group
+            %br
+            / Display the form
+            = render 'form'
+        %br
+        / Link to go back
+        = link_to 'Back', groups_path, {:style => "color: black"}
+        .p-3
+
+/ Footer
+= render "layouts/footer"
+/ End of Footer

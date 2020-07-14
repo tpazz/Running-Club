@@ -1,0 +1,44 @@
+/ Creating administrative accounts
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Create Admin Account
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  %body
+    .container
+      .p-3
+      / Link to the Home page
+      = link_to "◄ Return to Home page", "/", :class => "btn btn-primary rounded-pill"
+      .signup-form
+
+        = simple_form_for(@user, url: '/admin/new') do |f|
+          %h2 Admin Registration
+          %hr/
+          / First Name
+          %div
+            = f.input :first_name, autofocus: true
+          / Last Name
+          %div
+            = f.input :last_name
+          / E-mail
+          %div
+            = f.input :email
+          / Password
+          %div
+            - if @validatable
+              %i
+                (#{@minimum_password_length} characters minimum)
+            = f.input :password, autocomplete: "off"
+            = f.input :password_confirmation, autocomplete: "off"
+
+            = f.simple_fields_for :user_role do |role|
+              - roles = Role.where.not(:role_name => ["Parent", "Volunteer", "Run Leader"])
+              = f.association :roles, collection: roles, :label_method => :role_name, :value_method => :id, :selected => roles.first.id, :input_html => { :multiple => false}
+
+            %div= f.button :submit, "Create Admin", :style => "color:white"

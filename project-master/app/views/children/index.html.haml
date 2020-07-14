@@ -1,0 +1,112 @@
+/ Display all the children registered as members
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Children
+  = favicon_link_tag 'favicon.ico'
+  / Linking all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, fixed at the top of the page
+    / Contains the brand name and the log out button
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of the navigation fixed at the top
+    / Display the header using render
+    = render "layouts/header"
+    / Start of a section for the navigation bar
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display only the links to pages approved for the user's role
+            =render partial: 'pages/navbar'
+      /End of Navigation
+    / Section for displaying all children
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-4
+            / Heading
+            %h1 All Children
+            - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+            / As a Head Admin, you can add medical details for a child or emergency contacts
+            - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin'])
+              %a.btn.btn-dark.btn-xl.rounded-pill{:href => "med_details"} Click to edit medical details
+              %a.btn.btn-dark.btn-xl.rounded-pill{:href => "/emergency_contacts"} Emergency Contacts
+            / Both the Head Admin and the Member Secretary can add a new child
+            - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Member Secretary'])
+              %a.btn.btn-dark.btn-xl.rounded-pill{:href => "/children/new"} Add New Child
+            .p-3
+            / Creating a table
+            .table-responsive
+              %table#users-table.table.table-hover.table-striped.table-light
+                %thead.thead-dark
+                  / All the columns with titles
+                  %tr
+                    %th Group
+                    %th First Name
+                    %th Last Name
+                    %th Gender
+                    %th Date of birth
+                    %th Photo
+                    %th Medical issues
+                    / As a Head Admin you can see more fields containing the information
+                    / stated below, inside the if statement
+                    - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin'])
+                      %th Inactive days
+                      %th Paid
+                      %th Doctor name
+                    %th
+                    / If a user has the permission to edit a child details, it will see this field
+                    - if can? :update, Child
+                      %th
+                    / If a user has the permission to delete a child, it will see this field
+                    - if can? :destroy, Child
+                      %th
+
+                %tbody
+                  - @children.each do |child|
+                    / Rown containing the information for each child
+                    %tr
+                      %td= child.group.nil? ? "None" : child.group.group_name
+                      %td= child.first_name
+                      %td= child.last_name
+                      %td= Db_queries.gender(child.gender)
+                      %td= child.date_of_birth
+                      %td= Db_queries.photo_permission(child.photo)
+                      %td= child.medical_issues
+                      / Only the Head Admin can see this content
+                      - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin'])
+                        %td= child.inactive_days
+                        %td= child.paid ? "Yes" : "No"
+                        %td= child.doctor_name
+                      / Link to the show page, specific for a child
+                      %td= link_to 'Show', child, :class => "btn btn-outline-primary rounded-pill"
+                      / If a user has the permission to edit a child details, it will see this field
+                      - if can? :update, Child
+                        %td= link_to 'Edit', edit_child_path(child), :class => "btn btn-secondary rounded-pill"
+                      / If a user has the permission to delete a child, it will see this field
+                      - if can? :destroy, Child
+                        %td= link_to 'Destroy', child, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-danger rounded-pill"
+
+              %br
+            / Commented the link to add a new child on this page
+            / = link_to 'New Child', new_child_path
+/ Footer
+= render "layouts/footer"
+/ End of footer

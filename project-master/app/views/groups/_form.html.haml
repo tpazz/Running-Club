@@ -1,0 +1,17 @@
+-# Group's form
+-# frozen_string_literal: true
+= simple_form_for(@group) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  -# Input fields
+  .form-inputs
+    -# Group name
+    = f.input :group_name
+    -# Text displayed
+    %p Click below to find a color
+    -# Color pciker
+    = f.color_field :group_colour, value: "#E50914"
+
+    -# Sumit changes with a button click
+    = f.button :submit, {:class => "btn-secondary rounded-pill"}

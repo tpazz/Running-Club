@@ -1,0 +1,11 @@
+// Page used to edit an attendance
+%h1 Editing attendance
+
+// Diplaying the form from this folder
+= render 'form'
+
+// Link to the Show page
+= link_to 'Show', @attendance
+\|
+// Option to go back using a link
+= link_to 'Back', attendances_path

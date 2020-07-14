@@ -1,0 +1,20 @@
+// Form used for adding and editting events
+-# frozen_string_literal: true
+= simple_form_for(@event) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  / Input fields
+  .form-inputs
+    / Date
+    = f.input :date
+    / Name of the event
+    = f.input :name
+    / Is it part of a serie, boolena value stored in the databse
+    = f.input :series
+    / Details
+    = f.input :details
+
+  / Submit the changes by using a button click
+  .form-actions
+    = f.button :submit

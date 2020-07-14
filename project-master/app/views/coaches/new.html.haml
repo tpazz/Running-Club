@@ -1,0 +1,48 @@
+/ Page for creating a new coach
+!!!
+%html{:lang => "en"}
+  / Head
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, always fixed at the top of the page
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        / Brand
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of the Navigation
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            =render partial: 'pages/navbar'
+      /End of Navigation
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-5
+            / Display the form containing the field required for a coach
+            = render 'form'
+            / Option to go back, using a link
+            = link_to 'Back', coaches_path
+            .p-3
+/ Footer
+= render "layouts/footer"
+/ End of footer

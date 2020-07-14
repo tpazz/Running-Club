@@ -1,0 +1,99 @@
+/ Page displaying for a parent account the Children's groups
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Running Club
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, fixed at the top
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              / Log Out button
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Display the header, using render
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only display the links to pages approved for each type of user
+            =render partial: 'navbar'
+      /End of Navigation
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-3
+            / Heading
+            %h3 Children's Groups
+            / A parent has one or more children
+            - @groups.each do |group|
+              / Check that the child has a group
+              - group = Group.find(group)
+              / Find all the children within that group
+              - g_children = group.child
+              .p-2
+              .table-responsive
+                / Creating a table
+                %table#users-table.table.table-hover.table-striped.table-dark
+                  %thead.thead-light
+                    / Columns with titles
+                    %tr
+                      %th Group Name
+                      %th First Name
+                      %th Last Name
+                    %tbody
+                      / For each child in that group
+                      - g_children.each do |g_child|
+                        / Rows with the information from the database
+                        %tr
+                          / Showing the group and also making the background the same as the name of the group
+                          %td{:style => "background-color:  " + group.group_colour}= g_child.group.nil? ? "None" : g_child.group.group_name
+                          %td=g_child.first_name
+                          %td=g_child.last_name
+                %br
+            / For each child, find the schedule using the cg=hil'd group and display all of them
+            - @groups.each do |group|
+              - @schedules = Schedule.where(:group_id => group)
+            .p-3
+            %h3 Don't forget about...
+            .table-responsive
+              / Creating the table
+              %table#schedule-table.table.table-hover.table-striped.table-dark
+                %thead.thead-light
+                  / Columns with titles
+                  %tr
+                    %th Group
+                    %th Start date
+                    %th Start time
+                    %th Location
+                    %th Session type
+                %tbody
+                  - @schedules.each do |schedule|
+                    / For each schedule
+                    / Display information on rows
+                    %tr
+                      / Again, making the background color the same as the name of the group
+                      %td{:style=> "background-color:  " + Group.find_by_id(schedule.group_id).group_colour}= Group.find_by_id(schedule.group_id).group_name
+                      %td= schedule.start_time.strftime("%d/%m/%Y")
+                      %td= schedule.start_time.strftime("%H:%M")
+                      %td= schedule.location
+                      %td= schedule.session_type
+
+              %br
+/ Footer
+= render 'layouts/footer'
+/ End of Footer

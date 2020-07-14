@@ -1,0 +1,30 @@
+/ All roles page
+%h1 Listing roles
+
+/ Creating a table
+%table
+  %thead
+    / Columns with titles
+    %tr
+      %th Role name
+      %th
+      %th
+      %th
+
+  %tbody
+    / For each role
+    - @roles.each do |role|
+      %tr
+        / Role name`
+        %td= role.role_name
+        / Link to the show page
+        %td= link_to 'Show', role
+        / Link to the edit page
+        %td= link_to 'Edit', edit_role_path(role)
+        / Option to distroy
+        %td= link_to 'Destroy', role, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+/ Link to add a new role
+= link_to 'New Role', new_role_path

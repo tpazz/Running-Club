@@ -1,0 +1,14 @@
+/ Form for adding or editting details of a coach
+-# frozen_string_literal: true
+= simple_form_for(@coach) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+  / Heading displaying the full name
+  %h5.text-primary="Full Name: " + User.find(@coach.user_id).first_name + " " + User.find(@coach.user_id).last_name
+
+  / Field inputs containing the details required for a coach
+  .form-inputs
+    = f.input :telephone
+  / Submit the changes when clicking a button
+  .form-actions
+    = f.button :submit

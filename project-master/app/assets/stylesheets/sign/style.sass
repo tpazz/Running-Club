@@ -1,0 +1,519 @@
+/* Style.sass file
+ * Used on the SignIn and SignUp forms
+ * Link: https://getbootstrap.com/docs/3.4/css/
+
+// Style for the body, background color: light blue
+body
+  color: #fff
+  background: #55acfe
+  font-family: 'Roboto', sans-serif
+
+// Setting font size
+#font-size12
+  font-size: 16px
+
+// Setting font size
+.font-size14
+  font-size: 14px
+
+// Setting color to light gray
+.form-control
+  border-color: #e1e1e1
+  &:focus
+    border-color: #e1e1e1
+
+// Setting color to light gray and adding a margin on the right side
+.input-group-addon
+  border-color: #e1e1e1
+  margin-right: 5px
+
+// Setting  the border's radius to a soft-rounded corner
+.form-control, .btn
+  border-radius: 3px
+
+// The text will be displayed and alligned on the right side
+.text-float-right
+  float: right
+  margin-right: 15px
+
+// The text will be displayed and alligned on the left side
+.text-float-left
+  float: left
+  margin-left: 15px
+
+\::placeholder
+  /* Chrome, Firefox, Opera, Safari 10.1+
+  color: lightgrey
+  opacity: 1
+
+\:-ms-input-placeholder
+  /* Internet Explorer 10-11
+  color: lightgrey
+
+\::-ms-input-placeholder
+  /* Microsoft Edge
+  color: lightgrey
+
+// Setting style for the signup form
+.signup-form-split
+  width: 880px
+  margin: 0 auto
+  padding: 20px 0
+  form
+    color: #999
+    float: left
+    width: 420px
+    border-radius: 15px
+    margin-bottom: 15px
+    margin-left: 8px
+    margin-right: 8px
+    background: #fff
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3)
+    padding: 30px
+  h2
+    color: #333
+    font-weight: bold
+    margin-top: 0
+    text-align: center
+  hr
+    margin: 0 -30px 20px
+  .form-group
+    margin-bottom: 20px
+  label
+    font-weight: normal
+    font-size: 13px
+  p
+    text-align: center
+    font-size: 20px
+    margin-top: 10px
+
+  .form-control
+    min-height: 38px
+    box-shadow: none !important
+  .input-group-addon
+    max-width: 42px
+    text-align: center
+  input[type="checkbox"]
+    margin-top: 6px
+    margin-left: 10px
+  .btn
+    font-size: 16px
+    font-weight: bold
+    text-align: center
+    margin: auto
+    border-radius: 15px
+    background: #4C9AE4
+    border: none
+    min-width: 360px
+    &:hover, &:focus
+      background: #007bff
+      outline: none
+      color: white
+  .btn2
+    font-size: 16px
+    font-weight: bold
+    border-radius: 5px
+    margin: auto
+    background: #007bff
+    border: none
+    float: right
+    min-width: 100px
+    &:hover, &:focus
+      background: #179b81
+      outline: none
+  a
+    color: #fff
+    text-decoration: underline
+    &:hover
+      text-decoration: none
+  form a
+    color: #fff
+    text-decoration: none
+    background-color: #2A567F !important
+
+  .fa
+    font-size: 21px
+  .fa-paper-plane
+    font-size: 18px
+  .fa-check
+    color: #fff
+    left: 17px
+    top: 18px
+    font-size: 7px
+    position: absolute
+
+// Setting the style for the group
+.signup-form-group
+  width: 640px
+  margin: 0 auto
+  padding: 20px 0
+  form
+    color: #999
+    float: left
+    width: 290px
+    border-radius: 15px
+    margin-bottom: 15px
+    margin-left: 8px
+    margin-right: 8px
+    background: #fff
+
+  .btn
+    font-size: 29px
+    font-weight: bold
+    text-align: center
+    margin: auto
+    background: #4C9AE4
+    border: none
+    min-width: 296px
+    min-height: 10px
+    &:hover, &:focus
+      background: #007bff
+      outline: none
+      color: white
+
+// Setting style for all groups
+.signup-form-allgroup
+  width: 500px
+  margin: 0 auto
+  padding: 20px 0
+form
+    color: #999
+    width: 320px
+    border-radius: 15px
+    margin-bottom: 15px
+    margin-left: 8px
+    margin-right: 8px
+    background: #fff
+    padding: 2px
+
+  .btn
+    font-size: 29px
+    font-weight: bold
+    text-align: center
+    margin: auto
+    display: block
+    border-radius: 15px
+    background: #4C9AE4
+    border: none
+    min-width: 320px
+    min-height: 10px
+    &:hover, &:focus
+      background: #007bff
+      outline: none
+      color: white
+
+.signup-form
+  width: 450px
+  margin: 0 auto
+  padding: 20px 0
+  form
+    color: #999
+    border-radius: 15px
+    margin-bottom: 15px
+    background: #fff
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3)
+    padding: 30px
+  h2
+    color: #333
+    font-weight: bold
+    margin-top: 0
+    text-align: center
+  hr
+    margin: 0 -30px 20px
+  .form-group
+    margin-bottom: 20px
+  label
+    font-weight: normal
+    font-size: 13px
+  p
+    text-align: center
+    font-size: 20px
+    margin-top: 10px
+
+  .form-control
+    min-height: 38px
+    box-shadow: none !important
+  .input-group-addon
+    max-width: 42px
+    text-align: center
+  input[type="checkbox"]
+    margin-top: 6px
+    margin-left: 10px
+  .btn
+    font-size: 16px
+    font-weight: bold
+    text-align: center
+    margin: auto
+    border-radius: 15px
+    background: #4C9AE4
+    border: none
+    min-width: 390px
+    &:hover, &:focus
+      background: #007bff
+      outline: none
+      color: white
+  .btn2
+    font-size: 16px
+    font-weight: bold
+    border-radius: 5px
+    margin: auto
+    background: #007bff
+    border: none
+    float: right
+    min-width: 100px
+    &:hover, &:focus
+      background: #179b81
+      outline: none
+  a
+    color: #fff
+    text-decoration: underline
+    &:hover
+      text-decoration: none
+  form a
+    color: #fff
+    text-decoration: none
+
+  .fa
+    font-size: 21px
+  .fa-paper-plane
+    font-size: 18px
+  .fa-check
+    color: #fff
+    left: 17px
+    top: 18px
+    font-size: 7px
+    position: absolute
+
+.signup-form-exp
+  width: 500px
+  margin: 0 auto
+  padding: 20px 0
+  form
+    color: #999
+    border-radius: 15px
+    margin-bottom: 15px
+    background: #fff
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3)
+    padding: 30px
+  hr
+    margin: 0 -30px 20px
+  .form-group
+    margin-bottom: 20px
+  label
+    font-weight: normal
+    font-size: 13px
+  p
+    text-align: center
+    font-size: 20px
+    margin-top: 10px
+
+  .form-control
+    min-height: 38px
+    box-shadow: none !important
+  .input-group-addon
+    max-width: 42px
+    text-align: center
+  input[type="checkbox"]
+    margin-top: 6px
+    margin-left: 10px
+  .btn
+    font-size: 16px
+    font-weight: bold
+    text-align: center
+    margin: auto
+    border-radius: 15px
+    background: #4C9AE4
+    border: none
+    min-width: 440px
+
+
+.signup-form-msg
+  width: 850px
+  margin: 0 auto
+  padding: 60px 0
+  .notice
+    color: red
+    font-weight: bold
+  textarea
+    height: 300px
+  form
+    color: #999
+    border-radius: 15px
+    margin-bottom: 15px
+    background: #fff
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3)
+    padding: 30px
+  h2
+    color: #333
+    font-weight: bold
+    margin-top: 0
+    text-align: center
+  hr
+    margin: 0 -30px 20px
+  .form-group
+    margin-bottom: 20px
+  label
+    font-weight: normal
+    font-size: 13px
+  p
+    text-align: center
+    font-size: 20px
+    margin-top: 10px
+
+  .form-control
+    min-height: 38px
+    box-shadow: none !important
+  .input-group-addon
+    max-width: 42px
+    text-align: center
+  input[type="checkbox"]
+    margin-top: 6px
+    margin-left: 10px
+  .btn
+    font-size: 16px
+    font-weight: bold
+    text-align: center
+    display: block
+    margin: auto
+    border-radius: 15px
+    background: #4C9AE4
+    border: none
+    min-width: 100px
+    &:hover, &:focus
+      background: #007bff
+      outline: none
+      color: white
+  .btn2
+    font-size: 16px
+    font-weight: bold
+    border-radius: 5px
+    margin: auto
+    background: #007bff
+    border: none
+    float: right
+    min-width: 100px
+    &:hover, &:focus
+      background: #179b81
+      outline: none
+  a
+    color: #fff
+    text-decoration: underline
+    &:hover
+      text-decoration: none
+  form a
+    color: #fff
+    text-decoration: none
+    background-color: #2A567F !important
+
+  .fa
+    font-size: 21px
+  .fa-paper-plane
+    font-size: 18px
+  .fa-check
+    color: #fff
+    left: 17px
+    top: 18px
+    font-size: 7px
+    position: absolute
+
+.signup-form-con
+  width: 450px
+  margin: 0 auto
+  padding: 40px 0
+  .notice
+    color: red
+    font-weight: bold
+  textarea
+    height: 180px
+  form
+    color: #999
+    border-radius: 15px
+    margin-bottom: 15px
+    background: #fff
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3)
+    padding: 30px
+  h2
+    color: #333
+    font-weight: bold
+    margin-top: 0
+    text-align: center
+  hr
+    margin: 0 -30px 20px
+  .form-group
+    margin-bottom: 20px
+  label
+    font-weight: normal
+    font-size: 13px
+  p
+    text-align: center
+    font-size: 20px
+    margin-top: 10px
+
+  .form-control
+    min-height: 38px
+    box-shadow: none !important
+  .input-group-addon
+    max-width: 42px
+    text-align: center
+  input[type="checkbox"]
+    margin-top: 6px
+    margin-left: 10px
+  .btn
+    font-size: 16px
+    font-weight: bold
+    text-align: center
+    display: block
+    margin: auto
+    border-radius: 15px
+    background: #4C9AE4
+    border: none
+    min-width: 100px
+    &:hover, &:focus
+      background: #007bff
+      outline: none
+      color: white
+  .btn2
+    font-size: 16px
+    font-weight: bold
+    border-radius: 5px
+    margin: auto
+    background: #007bff
+    border: none
+    float: right
+    min-width: 100px
+    &:hover, &:focus
+      background: #179b81
+      outline: none
+  a
+    color: #fff
+    text-decoration: underline
+    &:hover
+      text-decoration: none
+  form a
+    color: #fff
+    text-decoration: none
+    background-color: #2A567F !important
+
+  .fa
+    font-size: 21px
+  .fa-paper-plane
+    font-size: 18px
+  .fa-check
+    color: #fff
+    left: 17px
+    top: 18px
+    font-size: 7px
+    position: absolute
+
+.div
+  width: 800px
+  margin: 0 auto
+  padding-top: 200px
+  h2
+    text-align: center
+  p
+    text-align: center
+  .btn
+    display: block
+    margin: auto
+    max-width: 400px

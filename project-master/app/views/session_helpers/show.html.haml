@@ -1,0 +1,18 @@
+/ Show page for a session helper
+/ Notice message
+%p#notice= notice
+
+/ Schedule
+%p
+  %b Schedule:
+  = @session_helper.schedule
+/ Coach
+%p
+  %b Coach:
+  = @session_helper.coach
+
+/ Link to the edit page
+= link_to 'Edit', edit_session_helper_path(@session_helper)
+\|
+/ Option to go back
+= link_to 'Back', session_helpers_path

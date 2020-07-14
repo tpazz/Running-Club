@@ -1,0 +1,21 @@
+// Show page for an attendance
+%p#notice= notice
+
+// Display the schedule
+%p
+  %b Schedule:
+  = @attendance.schedule
+// Display the child
+%p
+  %b Child:
+  = @attendance.child
+// Display number based on attendance on that session
+%p
+  %b Attended:
+  = @attendance.attended
+
+// Link to the edit page
+= link_to 'Edit', edit_attendance_path(@attendance)
+\|
+// Option to go back
+= link_to 'Back', attendances_path

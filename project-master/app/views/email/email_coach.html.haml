@@ -1,0 +1,38 @@
+!!!
+-# Email coach view where a list of all approved coaches are displayed
+%html{:lang => "en"}
+  %head
+  %title Coaches
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    -# Logout navbar
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    %br
+    %br
+    %br
+    %h1{style: 'text-align:center'} Coaches: #{@all_coaches.length}
+    .signup-form-split
+      - @all_coaches.each do |coach|
+        = simple_form_for :recipent, url: message_coach_path, method: :post do |f|
+          %tr
+            %td
+            = f.label :expiration, coach.first_name, :style => "font-size:25px"
+            = f.label :expiration, coach.last_name, :style => "font-size:25px"
+            %hr/
+            = coach.email
+            %br
+            %br
+            -# Hidden field to pass coach_id to controller for next view
+            = f.hidden_field :user_id, :value => coach.id
+            = f.button :submit, "Send email to recipent", id: coach.first_name + coach.last_name, :style => "background-color:black;color:white"

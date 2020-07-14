@@ -1,0 +1,23 @@
+/ Add children content
+.container
+  / Creating a form
+  -# frozen_string_literal: true
+  = simple_form_for(@child) do |f|
+    = f.error_notification
+    = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+    .form-group
+      .col-lg-8
+        / Field inputs, parameters specified with clear name
+        = f.input :parent, disabled: true, readonly: true, placeholder: current_user.to_s
+        = f.input :first_name
+        = f.input :last_name
+        = f.input :gender, collection: [["Male", 1],["Female", 2], ["Other", 0]]
+        = f.input :date_of_birth, :as => :date, :start_year => Date.today.year - 18 , :end_year => Date.today.year - 6
+        = f.input :photo, collection: [["No Photos Allowed", 0],["Photo Allowed, without name", 1], ["Photo Allowed, with name", 2]]
+        = f.input :medical_issues
+        = f.input :doctor_name
+        = f.input :doctor_address
+        = f.input :doctor_postcode
+    / Submit the details by clicking a button
+    .form-actions
+      = f.button :submit

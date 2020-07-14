@@ -1,0 +1,130 @@
+/ Move members page
+/ Used to change a child' group to a new one or none
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Move Members
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, always fixed at the top of the page
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log Out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of navigation
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only display the links to pages approved for each type of user
+            =render partial: 'pages/navbar'
+      /End of Navigation
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-3
+            / For all groups
+            - @groups.each do |group|
+              - counter = 0
+              / Find the children within that group
+              - m_children = group.child
+              / Style the name of the group with the color, based on the name
+              %h3{:style => "color:  " + group.group_colour}= group.group_name
+              .table-responsive
+                / Create tables
+                %table#users-table.table.table-hover.table-striped
+                  %thead.thead-dark
+                    / Columns with titles
+                    %tr
+                      %th Assigned Group
+                      %th Move To
+                      %th First Name
+                      %th Last Name
+                      %th Gender
+                      %th Date of Birth
+                      / Not displaying on the page
+                      .invisible
+                        %th.invisible Id
+                    %tbody
+                      / For each child in the group
+                      / m is used for member
+                      - m_children.each do |m_child|
+                        / Calculate the Total number of memebers/ children of each group
+                        - counter = counter + 1
+                        / Rows containing infomation from the database
+                        %tr
+                          / Find the child's group and display the name
+                          %td=m_child.group.nil? ? "None" : m_child.group.group_name
+                          / Option: moving child to a new group
+                          / Can't choose the current group they are in
+                          / Can choose the group to be nil, moving the child to inactive
+                          / Or choose a new one from the exisiting groups
+                          %td=select_tag :group,  options_for_select([Group.where(id: m_child.group_id), nil] + Group.where.not(id: m_child.group_id).collect{ |group| [group.group_name] } ), { data: { remote: true, url: move_members_child_path(m_child), method: :patch } }
+                          %td=m_child.first_name
+                          %td=m_child.last_name
+                          %td=Db_queries.gender(m_child.gender)
+                          %td=m_child.date_of_birth
+                          / Don't display on the page
+                          .invisible
+                            %td.invisible{:name => "id"}=m_child.id
+              / Display the Total number of children for groups
+              %h5= "Total Number Of Members: " + String(counter)
+              %br
+            / Table for children with group nil
+            %h3 Members without a group
+            - no_group = 0
+            .table-responsive
+              %table#users-table.table.table-hover.table-striped
+                %thead.thead-dark
+                  / Columns with title
+                  %tr
+                    %th Assigned Group
+                    %th Move To
+                    %th First Name
+                    %th Last Name
+                    %th Gender
+                    %th Date of Birth
+                    / Don't display on the page
+                    .invisible
+                      %th.invisible Id
+                  %tbody
+                    / For each child with no group
+                    - @children.each do |child_no_group|
+                      - no_group = no_group + 1
+                      / Display rows with the details from the database
+                      %tr
+                        / Same as above
+                        %td=child_no_group.group.nil? ? "None" : child_no_group.group.group_name
+                        %td=select_tag :group,  options_for_select([' '] + @groups), { data: { remote: true, url: move_members_child_path(child_no_group), method: :patch } }
+                        %td=child_no_group.first_name
+                        %td=child_no_group.last_name
+                        %td=Db_queries.gender(child_no_group.gender)
+                        %td=child_no_group.date_of_birth
+                        / Don't display to page
+                        .invisible
+                          %td.invisible{:name => "id"}=child_no_group.id
+            / Display the Total number
+            %h5= "Total Number: " + String(no_group)
+            %br
+            / Update changes with a button click
+            %a#s-btn.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "move_members"} Submit
+/ Footer
+= render "layouts/footer"
+/ End of Footer

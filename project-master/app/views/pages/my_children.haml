@@ -1,0 +1,65 @@
+/ My children page, created for parent users
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Running Club
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, always fixed at the top
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        / Brand
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          / Log out button
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of Navigation
+    / Display header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only show the links to pages that are approved to each type of user
+            =render partial: 'navbar'
+      / End of Navigation
+      .container
+        .row.align-items-center
+          / View all your children
+          .col-lg-6.order-lg-2
+            .p-5
+              %p If you need to update or just view information about your child, please use the button below!
+              %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "/my_children_details"} View my current children
+          / View all your children's Fellow Runners and schedules
+          .col-lg-6.order-lg-1
+            .p-5
+              %p To see more details about your child's group, please use the button below!
+              %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "/childrens_group"} View Fellow Runners
+        .row.align-items-center
+          / Emergency contact for your children
+          .col-lg-6.order-lg-2
+            .p-5
+              %p To add emergency contacts, please use the button below!
+              %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "/emergency_contacts"} Emergency Contacts
+          / Add a new child
+          .col-lg-6.order-lg-1
+            .p-5
+              %p If you need to add your child, please use the button below!
+              %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "children/new"} Add Child
+
+    / End of the Section
+    / Footer
+    = render "layouts/footer"
+    / End of footer

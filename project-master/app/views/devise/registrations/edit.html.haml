@@ -1,0 +1,44 @@
+/ Change password page
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Login
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+  / Body
+  %body
+    / Creating a form
+    .signup-form
+      = form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+        = devise_error_messages!
+        / Heading
+        %h2 Change password #{resource_name.to_s.humanize}
+        / Warning message
+        %p Please fill in your new password!
+        %hr/
+        / Current password
+        .form-group
+          %h6.control-label{:for => "new_password"} Current Password:
+          .controls
+            = f.password_field :current_password, autocomplete: "off", class: "form-control"
+        / New Password
+        .form-group
+          %h6.control-label{:for => "new_password"} New Password:
+          .controls
+            = f.password_field :password, autocomplete: "off", class: "form-control"
+        / Confirm New Password
+        .form-group
+          %h6.control-label{:for => "confirm_new_password"} Confirm New Password:
+          .controls
+            = f.password_field :password_confirmation, autocomplete: "off", class: "form-control"
+        .modal-footer
+          .text-float-left
+            %button.btn2.btn-primary{:href => "application"} Close
+          / Update using a button click
+          .text-float-right
+            %button.btn2.btn-primary{} Update

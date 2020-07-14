@@ -1,0 +1,11 @@
+/ Edit phone number page
+%h1 Editing phone_number
+
+/ Display the form from this folder
+= render 'form'
+
+/ Link to the show page
+= link_to 'Show', @phone_number
+\|
+/ Option to go back
+= link_to 'Back', phone_numbers_path

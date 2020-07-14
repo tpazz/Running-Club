@@ -1,0 +1,51 @@
+/ Reset payments page, it is used to reset the payment status of ll the mebers once a semester
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Reset Payment
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application"
+  = csrf_meta_tags
+  %body
+    / Fixed Navigation, always displayed at the top of the page
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of Navigation
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Only display the links to pages approved for each type of user
+            =render partial: 'navbar'
+      /End of Navigation
+    /Section for users
+    %section
+      .container
+        .col.text-center
+          .p-5#group-bt
+            / Heading
+            %h3 Reset the payments for all children
+            / Button used to reset the payment status of all members
+            %button#payment.btn.btn-warning.btn-xl.rounded-pill.mt-5.btn-lg{:name => "button-reset", :type => "button", :onclick => "return confirm('Are you sure you want to reset payments for all users？')"} Reset
+            / Cancel option
+            %a.btn.btn-xl.mt-5.rounded-pill{:href => "post_signin"} Cancel
+    / End of section
+    / Footer
+    = render "layouts/footer"
+    / End of footer

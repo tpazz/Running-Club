@@ -1,0 +1,72 @@
+!!!
+-# Approve coach application view where a list of non-approved coaches are
+  displayed and can be approved as either Run Leader or Volunteer, or rejected
+  and notified via email
+%html{:lang => "en"}
+  %head
+  %title Application approval
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    -# Logout navbar
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+
+    %br
+    %br
+    %br
+    %h1{style: 'text-align:center'} Approve applications: #{@all_coaches.length}
+    .signup-form-exp
+      - @all_coaches.each do |user|
+        - coach = User.find(user)
+        - coach2 = Coach.where(:user_id => coach.id).first
+        = simple_form_for :recipent, url: application_status_path, method: :post do |f|
+          %tr
+            %td
+            = f.label :expiration, coach.first_name, :style => "font-size:25px"
+            = f.label :expiration, coach.last_name, :style => "font-size:25px"
+            %hr/
+            
+            = f.label :expiration, "Qualifications:", :style => "font-size:20px;font-weight:bold"
+            %br
+            - @expiration = []
+            - exp_list(coach2).each do |document|
+              -# Calls helper method that returns certificate name and associated expiration date
+              - exp = qualifications(document.expiration)
+              - days = exp.to_s
+              - @expiration += [days]
+              #{document.title} - expires in
+              - if exp >= 31
+                = f.label :expiration, days, :style => "font-size:18px;color:green"
+                days
+              - elsif (exp > 1) && (exp < 31)
+                = f.label :expiration, days, :style => "font-size:18px;color:orange"
+                days
+              - elsif (exp == 1)
+                = f.label :expiration, "1 day", :style => "font-size:18px;color:red"
+              - elsif exp < 1
+                = f.label :expiration, "Expired", :style => "font-size:18px;color:red"
+              = "(" + document.expiration.to_s + ")"
+              %br
+            - if @expiration.empty?
+              %i No certificates
+            %p
+            = f.button :submit, "Approve as Volunteer", id: 'Vol' + coach.first_name + coach.last_name,
+              name: "volunteer", :style => "background-color:green;color:white"
+            %br
+            = f.button :submit, "Approve as Run Leader", id: 'Rl' + coach.first_name + coach.last_name,
+              name: "runl", :style => "background-color:green;color:white"
+            %br
+            = f.button :submit, "Reject", id: 'Reject' + coach.first_name + coach.last_name,
+              name: "reject", :style => "background-color:orange;color:black"
+            -# Hidden field to pass user to controller for next view
+            = f.hidden_field :user_id, :value => user

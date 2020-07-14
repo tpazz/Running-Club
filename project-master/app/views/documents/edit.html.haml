@@ -1,0 +1,12 @@
+/ Editting document page
+/ Heading
+%h1 Editing document
+
+/ Display the form
+= render 'form'
+
+/ Link to the show page
+= link_to 'Show', @document
+\|
+/ Link to go back
+= link_to 'Back', documents_path

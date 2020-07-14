@@ -1,0 +1,33 @@
+/ Phone numbers page
+%h1 Listing phone_numbers
+
+/ Crating a table
+%table
+  %thead
+    / Columns with titles
+    %tr
+      %th Parent
+      %th Phone number
+      %th
+      %th
+      %th
+
+  %tbody
+    / For each phone number
+    - @phone_numbers.each do |phone_number|
+      %tr
+        / Parent
+        %td= phone_number.parent
+        / Phone number
+        %td= phone_number.phone_number
+        / Link to the show page
+        %td= link_to 'Show', phone_number
+        / Link to the edit page
+        %td= link_to 'Edit', edit_phone_number_path(phone_number)
+        / Option to distroy
+        %td= link_to 'Destroy', phone_number, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+/ Link to add a new phone number
+= link_to 'New Phone number', new_phone_number_path

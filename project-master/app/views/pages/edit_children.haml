@@ -1,0 +1,115 @@
+/ Page for editing a child's details as a parent
+!!!
+%html{:lang => "en"}
+  / Head
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Link to the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = javascript_include_tag "application", media: "children"
+  = csrf_meta_tags
+  %body
+    / Navigation, fixed at the top of the page always
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Display the header using render
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            =render partial: 'navbar'
+      / End of Navigation
+      .container
+        / Heading
+        %h1{:id => "title"}
+          Child's Details
+        %hr/
+        .row
+          / Edit form column
+          .col-md-9.personal-info
+            .alert.alert-info.alert-info
+              %i.fa.fa-coffee
+              Don't forget to save if you make any
+              %strong changes
+              !
+            %form.form-horizontal{:role => "form"}
+              / First name
+              .form-group
+                %label.col-lg-3.control-label First name:
+                .col-lg-8
+                  %input.form-control{:name => "first_name", :required => "required", :type => "text", :value => "Alice"}/
+              / Last name
+              .form-group
+                %label.col-lg-3.control-label Last name:
+                .col-lg-8
+                  %input.form-control{:name => "last_name", :required => "required", :type => "text", :value => "Brown"}/
+              / Date of Birth
+              .form-group
+                %label.col-lg-3.control-label Date of Birth:
+                .col-lg-8
+                  %input.form-control{:name => "birthday", :required => "required", :type => "date", :value => "10/24/2010"}/
+              / Gender
+              .form-group
+                %label.col-lg-3.control-label Gender:
+                .col-lg-8
+                  .form-control
+                    %label.radio-inline
+                      %input{:name => "gender", :checked => "checked", :name => "optradio", :type => "radio"}>/
+                      Female
+                    %label.radio-inline
+                      %input{:name => "optradio", :type => "radio"}>/
+                      Male
+                    %label.radio-inline
+                      %input{:name => "optradio", :type => "radio"}>/
+                      Other
+              / Photo Approval
+              .form-group
+                %label.col-lg-3.control-label Photo Approval:
+                .col-lg-8
+                  %select#sel1.form-control
+                    %option Photos with name included in the Gallery
+                    %option Photos without name
+                    %option No photos
+              / Emergency Numbers
+              / Adding up to 3 is possible
+              .form-group
+                %label.col-lg-3.control-label Emergency Number:
+                .col-lg-8
+                  %input.form-control{:name => "phone_number_1", :required => "required", :type => "tel", :value => "07700 900733"}/
+              .form-group
+                %label.col-lg-3.control-label Emergency Number 2:
+                .col-lg-8
+                  %input.form-control{:name => "phone_number_2", :type => "tel", :value => "Optional"}/
+              .form-group
+                %label.col-lg-3.control-label Home Number:
+                .col-lg-8
+                  %input.form-control{:name => "home_number", :type => "tel", :value => "Optional"}/
+              / Delete option
+              .form-group
+                %label.col-lg-5.control-label.font-weight-bold Would you like to delete this infomation?
+                .col-md-8{:id => "my_acc"}
+                  %button.btn.btn-outline-danger.btn-lg#delete-btn{:type => "button", :onclick => "return confirm('Are you sure you want to delete this member？')"} Delete Child
+              .form-group
+              %label.col-md-3.control-label
+                .col-md-8{:id => "my_acc"}
+                  / Update information button
+                  %input.btn.btn-primary#update-btn{:type => "button", :value => "Update Account"}/
+                  %a.btn.btn-default.btn-xl{:href => "my_children"}Cancel
+      %hr/
+    / End of section
+    / Footer
+    = render "layouts/footer"
+    / End of Footer

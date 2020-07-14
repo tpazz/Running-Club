@@ -1,0 +1,101 @@
+/* scaffolds.scss file
+ * Used to style all the pages generated with scafold
+ */
+
+/* Style for the body, setting the background to: white
+ * text color: dark gray, size and margin in pixels
+ */
+body {
+  background-color: #fff;
+  color: #333;
+  margin: 33px;
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+/* Applied to` the paragraphs, ordered lists, unordered (bulleted) lists,
+ * cells in tables, setting the style for the text
+ */
+p, ol, ul, td {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+//Style for a preformatted text
+pre {
+  background-color: #eee;
+  padding: 10px;
+  font-size: 11px;
+}
+
+// Style for a hyperlink (used to link from one page to another)
+a {
+  color: #000;
+
+  &:visited {
+    color: #666;
+  }
+
+  &:hover {
+    color: #fff;
+    background-color: #000;
+  }
+}
+
+// Syle for table components
+th {
+  padding-bottom: 5px;
+}
+
+td {
+  padding: 0 5px 7px;
+}
+
+div {
+  &.field, &.actions {
+    margin-bottom: 10px;
+  }
+}
+
+// The notice will display a text of color: green
+#notice {
+  color: green;
+}
+
+// Style for fieds when an error occurs
+.field_with_errors {
+  padding: 2px;
+  background-color: red;
+  display: table;
+}
+
+// Style to display th explenation of an error
+#error_explanation {
+  width: 450px;
+  border: 2px solid red;
+  padding: 7px 7px 0;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  // Style for Heading 2
+  h2 {
+    text-align: left;
+    font-weight: bold;
+    padding: 5px 5px 5px 15px;
+    font-size: 12px;
+    margin: -7px -7px 0;
+    background-color: #c00;
+    color: #fff;
+  }
+  // Style for a list elements
+  ul li {
+    font-size: 12px;
+    list-style: square;
+  }
+}
+
+// Setting the style for a label
+label {
+  display: block;
+}

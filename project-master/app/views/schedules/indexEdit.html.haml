@@ -1,0 +1,78 @@
+/ All schedules page
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Schedule
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation bar, always fixed at the top of the page
+    = render "top_navbar"
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation bar, only show the links to pages approved for each type of user
+      =render partial: 'navbar_s'
+      .container
+        .col-md-offset-2.mx-auto
+          / If a user is allowed to add a new schedule, this button will be displayed
+          - if can? :new, Schedule
+            %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5#btn-user{:href => "schedules/new"} New Schedule
+          / Button to go to normal schedule
+          %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5#btn-user{:href => "/schedule"} Normal Schedule
+          / Heading
+          %h1.text-center Schedule
+          .table-responsive
+            / Creating a table
+            %table#schedule-table.table.table-hover.table-striped.table-dark
+              %thead.thead-light
+                / Columns with titles
+                %tr
+                  %th Group
+                  %th Start date
+                  %th Start time
+                  %th Location
+                  / If a user is allowed to see the Run Leader, this column will be displayed
+                  - if can? :view_runleader, Schedule
+                    %th Run Leader
+                  %th Session type
+                  / If a user is allowed to edit the schedule, this column will be displayed
+                  - if can? :update, Schedule
+                    %th
+                  / If a user is allowed to destroy the schedule, this column will be displayed
+                  - if can? :destroy, Schedule
+                    %th
+              %tbody
+                / For each schedule
+                - Db_queries.display_schedule.each do |schedule|
+                  %tr
+                    / Group name with the background color set as the name
+                    %td{:style=> "background-color:  " + Group.find_by_id(schedule.group_id).group_colour}= Group.find_by_id(schedule.group_id).group_name
+                    / Start Time, day - month -year
+                    %td= schedule.start_time.strftime("%d/%m/%Y")
+                    / Start Time, hour - minutes
+                    %td= schedule.start_time.strftime("%H:%M")
+                    / Location
+                    %td= schedule.location
+                    / If a user is allowed to see the Run Leader, this rows will be displayed
+                    - if can? :view_runleader, Schedule
+                      %td= User.find_by_id(Coach.find_by_id((SessionHelper.where(:team_leader => true, :schedule_id => schedule.id).first.coach_id)).user_id).first_name
+                    / Session type
+                    %td= schedule.session_type
+                    / If a user is allowed to edit the schedule, this rows will be displayed
+                    - if can? :update, Schedule
+                      %td= link_to 'Edit', edit_schedule_path(schedule), :class => "btn btn-secondary rounded-pill"
+                    / If a user is allowed to destroy the schedule, this rows will be displayed
+                    - if can? :destroy, Schedule
+                      %td= link_to 'Destroy', schedule, method: :delete, data: { confirm: 'Are you sure?'}, :class => "btn btn-danger rounded-pill"
+
+          %br
+
+/ Footer
+= render "layouts/footer"
+/ End of Footer

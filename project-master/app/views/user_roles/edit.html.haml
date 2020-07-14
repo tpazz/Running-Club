@@ -1,0 +1,37 @@
+/ Page used for editting a user's role
+!!!
+%html{:lang => "en"}
+  / Head
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation Bar, lways fixed at the top of the page
+    = render "schedules/top_navbar"
+    /End of Navigation
+    / Display the header, using render
+    = render "layouts/header"
+    / Section for editting the role
+    %section
+      = render "schedules/navbar_s"
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-4
+            / Heading
+            %h3 Editing Role
+            / Display the form from this folder
+            = render 'form'
+        / Link tot he show page it displays specific details for each user
+        = link_to 'Show', @user_role, {:style => "color: black", :class => "btn"}
+        \|
+        / Option to go back, using a link
+        = link_to 'Back', user_roles_path, {:style => "color: black", :class => "btn"}
+        .p-4
+/ Footer
+= render "layouts/footer"
+/ End of Footer

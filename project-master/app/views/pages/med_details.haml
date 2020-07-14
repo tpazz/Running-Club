@@ -1,0 +1,69 @@
+/ Medical details page
+!!!
+%html{:lang => "en"}
+  / Head
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Link to all style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, always fixed at the top of the page
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log Out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Display the header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display only links to pages that are accessible for each type of user
+            =render partial: 'navbar'
+      /End of Navigation
+    %section
+      .container
+        .align-items-center
+          .p-5
+            / Heading
+            %h2.display-4 Edit Medical Details
+            / Creating a table
+            %table.table
+              %thead.thead-dark
+                / Columns with titles
+                %tr
+                  %th{:scope => "col"} Group ▼
+                  %th{:scope => "col"} First Name ▼
+                  %th{:scope => "col"} Last Name ▼
+                  %th{:scope => "col"} Current Medical Details ▼
+                  %th.invisible{:scope => "col"} ID
+              %tbody
+                / For each child
+                - @children.each do |child|
+                  / Rows containing the information from the database
+                  %tr
+                    %td= child.group.nil? ? "None" : child.group.group_name
+                    %td= child.first_name
+                    %td= child.last_name
+                    %td
+                      %input.form-control{:name => "medical_details_field", :type => "text", :value=> child.medical_issues,  data: { remote: true, url: med_details_child_path(child), method: :patch } }
+                    / Not displaying on the page
+                    %td.invisible{:name => "id"}= child.id
+          / Submit changes with a button click
+          %a#s-btn.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "med_details"} Update
+
+    / End of section
+    / Footer
+    = render "layouts/footer"
+    / End of footer

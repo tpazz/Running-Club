@@ -1,0 +1,41 @@
+/ Form for children, used to add or edit information about them
+-# frozen_string_literal: true
+= simple_form_for(@child) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  / All the field inputs, containing details required for a child
+  / They are stated with clear names
+  .form-inputs
+    / A child is in a group
+    = f.association :group
+    / A child has a parent
+    = f.association :parent
+    / A child has a first name
+    = f.input :first_name
+    / A child has a last name
+    = f.input :last_name
+    / A child has a gender, which are stated in the database as integers
+    = f.input :gender, collection: [["Male", 1],["Female", 2], ["Other", 0]]
+    / A child is allowed to have for this system the age between 8 and 16
+    = f.input :date_of_birth, :as => :date, :start_year => Date.today.year - 16 , :end_year => Date.today.year - 8
+    / A child can have on of the folowing photo permissions
+    / They are stated in the database as integers
+    = f.input :photo, collection: [["No Photos Allowed", 0],["Photo Allowed, without name", 1], ["Photo Allowed, with name", 2]]
+    / A child might have medical issues
+    = f.input :medical_issues
+    / A child might be inactive
+    = f.input :inactive_days
+    / A child can be collected after a session
+    = f.input :collected
+    / A child should pay for the club membership
+    / This is stored in the database
+    = f.input :paid
+    / A child should provide details about the his/hers doctor
+    = f.input :doctor_name
+    = f.input :doctor_address
+    = f.input :doctor_postcode
+
+  / Submit the details with a click of a button
+  .form-actions
+    = f.button :submit

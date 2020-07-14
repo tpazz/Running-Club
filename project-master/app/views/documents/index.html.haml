@@ -1,0 +1,31 @@
+/ Documents page
+%h1 Listing documents
+
+/ Creating the table
+%table
+  %thead
+    / Columns with titls and blank when a button is used to link other pages
+    %tr
+      %th Coach
+      %th Attachment
+      %th
+      %th
+      %th
+
+  %tbody
+    - @documents.each do |document|
+      / Rows displaying details from the database
+      %tr
+        %td= document.coach
+        %td= document.attachment
+        / Link to the show page
+        %td= link_to 'Show', document
+        / Link to the edit page
+        %td= link_to 'Edit', edit_document_path(document)
+        / Link to destroy a document
+        %td= link_to 'Destroy', document, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+/ Link to add a new document
+= link_to 'New Document', new_document_path

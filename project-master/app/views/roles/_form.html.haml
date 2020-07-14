@@ -1,0 +1,14 @@
+-# Form for roles
+-# frozen_string_literal: true
+= simple_form_for(@role) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  -# Input fields
+  .form-inputs
+    -# Name of the role
+    = f.input :role_name
+
+  -# Submit changes with a button click
+  .form-actions
+    = f.button :submit

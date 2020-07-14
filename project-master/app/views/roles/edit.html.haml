@@ -1,0 +1,11 @@
+/ Edit page for a role
+%h1 Editing role
+
+/ Display the form
+= render 'form'
+
+/ Link to the show page
+= link_to 'Show', @role
+\|
+/ Option to go back
+= link_to 'Back', roles_path

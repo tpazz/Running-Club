@@ -1,0 +1,10 @@
+/ Navigation bar, checking what type of user is the currently logged in user
+- if user_signed_in?
+  %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+    .container
+      %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+        %span.navbar-toggler-icon
+      #navbarResponsive.collapse.navbar-collapse
+        / Display only the links to pages approved for each type of user
+        =render partial: 'pages/navbar'
+/ End of Navbar

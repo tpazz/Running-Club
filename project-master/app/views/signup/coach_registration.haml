@@ -1,0 +1,71 @@
+/ Registration page for Coaches
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Apply for coach
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    .container
+      .p-3
+      / Link to the Home page
+      = link_to "◄ Return to Home page", "/", :class => "btn btn-primary rounded-pill"
+    .signup-form
+
+      = simple_form_for(@user, url: '/coach_registration') do |f|
+        %h2 Coach Registration
+        %hr/
+        / First Name
+        %div
+          = f.input :first_name, autofocus: true
+        / Last Name
+        %div
+          = f.input :last_name
+        / E-mail
+        %div
+          = f.input :email
+        / Password
+        %div
+          - if @validatable
+            %i
+              (#{@minimum_password_length} characters minimum)
+          = f.input :password, autocomplete: "off"
+          = f.input :password_confirmation, autocomplete: "off"
+
+
+        = f.simple_fields_for :coach do |coach|
+          = coach.error_notification
+          = coach.error_notification message: coach.object.errors[:base].to_sentence if coach.object.errors[:base].present?
+          %div
+            / Address
+            = coach.input :telephone
+
+          .form-group
+            Add Document Information Below
+            %br
+            Including the following qualifications if you have them
+            First Aid, Safeguarding, Coaching Qualifications
+            %br
+            They will be inspected in person for approval
+
+
+          / Add Documents, optional
+          = coach.simple_fields_for :document do |document|
+            .bg-primary
+              = link_to_add_association 'Add Document', coach, :document
+
+
+        %br/
+        = f.button :submit, "Create Coach", :style => "color:white"
+
+
+      / Option if you already have an account as a coach
+      .text-center
+        Already have an account?
+        %a{:href => "/login"} Sign In here

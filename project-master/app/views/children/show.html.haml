@@ -1,0 +1,109 @@
+/ Show page for a specific child
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Running Club
+  = favicon_link_tag 'favicon.ico'
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, fixed at the top of the page
+    / Contains the brand name and the log out button
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of the navigation fixed at the top
+    / Display the header using render
+    = render "layouts/header"
+    / Start of a section for the navigation bar
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display only the links to pages approved for the user's role
+            =render partial: 'pages/navbar'
+      / End of Navigation
+      / Page content specific to a child
+      .container
+      / Function to check a user's roles
+      - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+      .p-4
+        / Show a notice message if a change was made
+        %p#notice= notice
+        / A child's group
+        %p
+          %b Group:
+          = @child.group
+        / A child's parent
+        %p
+          %b Parent:
+          = @child.parent
+        / A child's first name
+        %p
+          %b First name:
+          = @child.first_name
+        / A child's last name
+        %p
+          %b Last name:
+          = @child.last_name
+        / A child's gender
+        %p
+          %b Gender:
+          = @child.gender
+        / A child's date of birth
+        %p
+          %b Date of birth:
+          = @child.date_of_birth
+        / A child's photo permission details
+        %p
+          %b Photo:
+          = @child.photo
+        / A child's inactive days
+        %p
+          %b Inactive days:
+          = @child.inactive_days
+        / A child's medical issues
+        %p
+          %b Medical issues:
+          = @child.medical_issues
+        / A child's information if collected
+        %p
+          %b Collected:
+          = @child.collected
+        / A child's status of payment
+        %p
+          %b Paid:
+          = @child.paid
+        / A child's details about the doctor
+        %p
+          %b Doctor name:
+          = @child.doctor_name
+        %p
+          %b Doctor address:
+          = @child.doctor_address
+        %p
+          %b Doctor postcode:
+          = @child.doctor_postcode
+
+        / Link to the edit page
+        = link_to 'Edit', edit_child_path(@child), {:style => "color: black", :class => "btn"}
+        \|
+        / Option to go back to the right page based on the user type
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Parent'])
+          = link_to 'Back', my_children_path, {:style => "color: black", :class => "btn"}
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Coach Secretary', 'Member Secretary', 'Treasurer'])
+          = link_to 'Back', children_path, {:style => "color: black", :class => "btn"}
+  / Footer
+  = render 'layouts/footer'
+  / End of Footer

@@ -1,0 +1,17 @@
+/ Used to display the top content on other pages
+!!!
+%html{:lang => "en"}
+  %head
+  %title Running Club
+  = favicon_link_tag 'favicon.ico'
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Fixed at the top of the page navigation bar
+    = render "schedules/top_navbar"
+    / Header
+    = render "layouts/header"
+    / Navigation bar
+    = render partial: 'schedules/navbar_s'

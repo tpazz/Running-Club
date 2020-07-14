@@ -1,0 +1,15 @@
+/ Error 404
+/ Display top content
+= render "errors/top_content"
+.col.text-center
+  .p-5
+    %h1{:style => "color: #dc3545"} Not Found
+    .invisible
+      %sup#error-code 404
+    %h6 The requested page could not be found. Please check the address and try again. If you are unsure you may return to the #{link_to 'Home page', '/', style: "color: blue"}.
+    %p
+      If you continue to see this message please send a description of the problem
+      = mail_to "support@epigenesys.org.uk", 'here.', style: 'color: blue'
+
+/ Footer
+= render "layouts/footer"

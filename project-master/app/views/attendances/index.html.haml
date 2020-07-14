@@ -1,0 +1,31 @@
+// Page for diplaying all the attendances with details
+%h1 Listing attendances
+
+// Using a table to show all the information
+%table
+  %thead
+    // Columns of the table
+    %tr
+      %th Schedule
+      %th Child
+      %th Attended
+      %th
+      %th
+      %th
+
+  %tbody
+    // Using a loop to display all the attendances
+    - @attendances.each do |attendance|
+      // rows with all the details
+      %tr
+        %td= attendance.schedule
+        %td= attendance.child
+        %td= attendance.attended
+        %td= link_to 'Show', attendance
+        %td= link_to 'Edit', edit_attendance_path(attendance)
+        %td= link_to 'Destroy', attendance, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+// Link to adding a new attendance
+= link_to 'New Attendance', new_attendance_path

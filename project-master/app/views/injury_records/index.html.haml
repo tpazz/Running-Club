@@ -1,0 +1,92 @@
+/ Listing the Injury Records page
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Injury Record
+  = favicon_link_tag 'favicon.ico'
+  / Link all the tyle ad javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, always fixed at the top of the page
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        / Brand
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of Navigation
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display the links to pages approved by each type of user
+            =render partial: 'pages/navbar'
+      / End of Navigation Bar
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5#btn-user{:href => "injury_records/new"} New Injury Record
+            %h3 Listing Injuries Of Every Child
+            .p-2
+            .table-responsive
+              / Creating a table with all of the existing injury records
+              %table#schedule-table.table.table-hover.table-striped.table-light
+                %thead.thead-dark
+                  / Columns with titles
+                  %tr
+                    %th Date
+                    %th Child
+                    %th Injury
+                    %th During
+                    %th Location
+                    %th Parent notified
+                    %th
+                    / If a user has the permission to edit an injury record, this field will be displayed
+                    - if can? :update, InjuryRecord
+                      %th
+                    / If a user has the permission to delete an injury record, this field will be displayed
+                    - if can? :destroy, InjuryRecord
+                      %th
+                %tbody
+                  / For each injury record
+                  - @injury_records.each do |injury_record|
+                    / Rows containing details from the database
+                    %tr
+                      / Start time
+                      %td= injury_record.schedule.start_time.strftime("%d/%m/%Y")
+                      / Child's name
+                      %td= injury_record.child.first_name + " " + injury_record.child.last_name
+                      / Updated at date
+                      %td= String(injury_record.updated_at)[0..15]
+                      / Session type
+                      %td=Schedule.find(injury_record.schedule_id).session_type
+                      / Location
+                      %td=Schedule.find(injury_record.schedule_id).location
+                      / Parent notified about the incident, boolean
+                      %td=injury_record.parent_notified
+                      / Link to the show page
+                      %td= link_to 'Show', injury_record, :class => "btn btn-outline-primary rounded-pill"
+                      / If a user has the permission to edit an injury record, this field will be displayed
+                      - if can? :update, InjuryRecord
+                        %td= link_to 'Edit', edit_injury_record_path(injury_record), :class => "btn btn-secondary rounded-pill"
+                      / If a user has the permission to delete an injury record, this field will be displayed
+                      - if can? :destroy, InjuryRecord
+                        %td= link_to 'Destroy', injury_record, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-danger rounded-pill"
+
+
+/ Footer
+= render "layouts/footer"
+/ End of footer

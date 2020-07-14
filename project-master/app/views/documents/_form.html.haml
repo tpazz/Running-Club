@@ -1,0 +1,12 @@
+/ Form for documents
+-# frozen_string_literal: true
+= simple_form_for(@document) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+  / Input fields
+  .form-inputs
+    = f.association :coach
+    = f.input :attachment
+  / Submit changes
+  .form-actions
+    = f.button :submit

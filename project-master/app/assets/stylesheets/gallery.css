@@ -1,0 +1,15 @@
+#gallery img{
+  width:100%;
+  filter: opacity(100%);
+  -webkit-transition: 0.3s linear;
+}
+
+#gallery img:hover{
+  filter: opacity(80%);
+  transform: scale(1.05);
+  -webkit-transition: 0.3s linear;
+}
+
+.col-md-3{
+  padding:5px;
+}

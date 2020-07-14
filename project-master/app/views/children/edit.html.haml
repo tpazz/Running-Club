@@ -1,0 +1,64 @@
+/ Pages used to edit the details of a child
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Running Club
+  = favicon_link_tag 'favicon.ico'
+  / Linking all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, fixed at the top of the page
+    / Contains the brand name and the log out button
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of the navigation fixed at the top
+    / Display the header using render
+    = render "layouts/header"
+    / Start of a section for the navigation bar
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display only the links to pages approved for the user's role
+            =render partial: 'pages/navbar'
+      / End of Navigation
+      / Page content specific to a child
+      .container
+        / Heading
+        %h1{:id => "title"}
+          Edit Child Details
+        - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+        / As a Head Admin you can edit more information about a child
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin'])
+          / Display the fields for the child, based on the role of Head Admin
+          / The form used is the one from this folder
+          = render 'form'
+        / As a parent you have the right to edit some information about a child
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Parent'])
+          / Displaying the fields approved for a child that the Parent can edit
+          / The content is in the page _add_child from the folder pages
+          = render 'pages/add_child'
+        .p-3
+        / As a parent, you can go back to the page containg options for your children
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Parent'])
+          = link_to 'Back', my_children_path, {:style => "color: black", :class => "btn"}
+        / As other user types, you should go back to the children page
+        - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Member Secretary'])
+          = link_to 'Back', children_path, {:style => "color: black", :class => "btn"}
+        .p-3
+  / Footer
+  = render 'layouts/footer'
+  / End of Footer

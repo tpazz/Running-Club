@@ -1,0 +1,9 @@
+-# Mail body for sending email to a group or all groups - simple_format is used
+  to preserve white-space and breaks
+
+- if @colour == "All"
+  %p Dear #{@colour} group members,
+- else
+  %p Dear #{@colour} group member,
+
+= simple_format @message

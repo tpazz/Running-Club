@@ -1,0 +1,75 @@
+/ User Roles page
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title User Roles
+  = favicon_link_tag 'favicon.ico'
+  / Link all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation Bar, always fixed at the top
+    = render "schedules/top_navbar"
+    /End of Navigation
+    / Display the header
+    = render "layouts/header"
+    / End of the header
+    %section
+      / Navigation Bar
+      / Only display the links to pages approved for each type of user
+      = render "schedules/navbar_s"
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-3
+            / Function used to check the roles of a user
+            - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+            / Check if the user is a Head Admin
+            - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin'])
+              / If the condition is satisfied, show the button for adding a new role
+              %a.btn.btn-secondary.btn-xl.rounded-pill.mt-5#btn-user{:href => "user_roles/new"} Assign New Role
+            / Heading
+            %h3 Listing All The Users
+            .table-responsive
+              %table#users-table.table.table-hover.table-striped.table-light
+                %thead.thead-dark
+                  / Columns with titles
+                  %tr
+                    %th First Name
+                    %th Last Name
+                    %th Role
+                    %th Email
+                    %th
+                    / If a user has the permission to edit a user's role, this field will be displayed
+                    - if can? :update, UserRole
+                      %th
+                    / If a user has the permission to delete a user's role, this field will be displayed
+                    - if can? :destroy, UserRole
+                      %th
+                  %tbody
+                    - @display_roles = UserRole.eager_load(:user, :role)
+                    - @display_roles.each do |user_role|
+                      %tr
+                        / First name
+                        %td= user_role.user.first_name
+                        / Last name
+                        %td= user_role.user.last_name
+                        / Role
+                        %td= user_role.role.role_name
+                        / Email
+                        %td= user_role.user.email
+                        %td= link_to 'Show', user_role, :class => "btn btn-outline-primary rounded-pill"
+                        / If a user has the permission to edit a user's role, this field will be displayed
+                        - if can? :update, UserRole
+                          %td= link_to 'Edit', edit_user_role_path(user_role), :class => "btn btn-secondary rounded-pill"
+                        / If a user has the permission to delete a user's role, this field will be displayed
+                        - if can? :destroy, UserRole
+                          %td= link_to 'Destroy', user_role, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-danger rounded-pill"
+
+              %br
+/ Footer
+= render "layouts/footer"
+/ End of footer

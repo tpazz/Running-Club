@@ -1,0 +1,82 @@
+/ Page for approving children as members
+!!!
+%html{:lang => "en"}
+  / Head
+  %head
+  %title Application approval
+  = favicon_link_tag 'favicon.ico'
+  / Linking all the javascript ans style files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display only the links to pages approved for each type of user
+            =render partial: 'navbar'
+      /End of Navigation
+    %section
+      .container
+        .items-center
+          %p
+          / Heading
+          %h3.display-4 Children Applications
+          .table-responsive
+            / Creating a table
+            %table.table.table-hover
+              %thead.thead-dark
+                / Columns with titles
+                %tr
+                  %th{:scope => "col"} First Name ▼
+                  %th{:scope => "col"} Last Name ▼
+                  %th{:scope => "col"} Date of Birth ▼
+                  %th{:scope => "col"} Gender ▼
+                  %th{:scope => "col"} Approve ▼
+                  %th{:scope => "col"} Disapprove ▼
+                  %th{:scope => "col"} Waiting ▼
+                  %th.invisible{:scope => "col"} Id ▼
+              %tbody
+                / Rows containing the information required above for each child
+                - @children.each do |child|
+                  / Display the information for each cell
+                  %tr
+                    %td= child.first_name
+                    %td= child.last_name
+                    %td= child.date_of_birth
+                    %td= Db_queries.gender(child.gender)
+                    %td
+                      / When approving a child, he or she will be immediately assigned to a group
+                      / Select from none, this will make the child stay on the waiting list
+                      / Or choose one from the existing ones in the database
+                      = select_tag :group,  options_for_select([' '] + Group.all.collect{ |group| [group.group_name] }), { data: { remote: true, url: approve_children_child_path(child), method: :patch } }
+                    %td#middle
+                      / Option to disapprove the child
+                      %input#blankCheckbox.form-check-input.position-static{ data: { remote: true, url: approve_children_child_path(child), method: :patch }, type: :checkbox, name: 'disapprove', value: 'in' }
+                    %td#middle
+                      / Option to put the child on the waiting list
+                      %input#blankCheckbox.form-check-input.position-static{ data: { remote: true, url: approve_children_child_path(child), method: :patch }, type: :checkbox, name: 'waiting', value: 'in' }
+                    %td.invisible{:name => "id"}= child.id
+          / Submit the changes when clicking a button
+          %a#s-btn.btn.btn-secondary.btn-xl.rounded-pill.mt-5{:href => "/approve_children"} Submit
+    /End Of Section
+    / Footer
+    = render "layouts/footer"
+    / End of footer

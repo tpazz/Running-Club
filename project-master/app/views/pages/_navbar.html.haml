@@ -1,0 +1,179 @@
+/ Creating the navigation bar
+/ Since it is frequently used, we are displaying the content
+/ On other pages using the render function
+%ul.navbar-nav.ml-auto
+  / Using a function to check what the current (logged in) user's roles are
+  - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Coach Secretary', 'Member Secretary', 'Parent', 'Run Leader', 'Treasurer', 'Volunteer', 'Welfare Officer'])
+    / Can access the Home page
+    %li.nav-item
+      / Link to the home page
+      %a.nav-link{:href => "/post_signin"} Home
+
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Welfare Officer', 'Member Secretary'])
+    / Can access options about applications of Children and Coaches
+    %li.nav-item.dropdown
+      / Dropdown options with links to: Children requesting to join the club,
+      / and the visitors/ non-users requesting to become a coach for the club
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Applications
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/approve_children"} CHILDREN
+        %a.dropdown-item{:href => "/email_application_status"} COACHES
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Coach Secretary', 'Member Secretary', 'Run Leader', 'Treasurer', 'Welfare Officer'])
+    / Can access the Injury page
+    %li.nav-item
+      %a.nav-link{:href => "/injury_records"} Injury
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Member Secretary'])
+    / Can access the Events page
+    %li.nav-item
+      %a.nav-link{:href => "/our_events"} Events
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Treasurer'])
+    / Can access the pages with all the runners/members and listing their payment status
+    %li.nav-item
+      %a.nav-link{:href => "/children"} Runners
+    %li.nav-item
+      %a.nav-link{:href => "/view_children_payments"} Payments
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Coach Secretary', 'Member Secretary'])
+    / Can access the pages related to the groups of runners
+    %li.nav-item.dropdown
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Groups
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/groups"} ALL GROUPS
+        %a.dropdown-item{:href => "/children"} ALL RUNNERS
+        %a.dropdown-item{:href => "/move_members"} CHANGE RUNNER'S GROUP
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if can? :numbers_coaches, Coach
+    / Can access the page with all the volunteers numbers listed 
+    %li.nav-item
+      %a.nav-link{:href => "/numbers_coaches"} Volunteer No
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Member Secretary'])
+    %li.nav-item.dropdown
+      / Dropdown menu links with the options to email: Groups or a User
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Email
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/email_groups"} GROUPS
+        %a.dropdown-item{:href => "/email_user"} A USER
+    %li.nav-item.dropdown
+      / Dropdown menu links with the options to pages: displaying all the Users and to reset all the Payments
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Users
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/user_roles"} ALL USERS
+        %a.dropdown-item{:href => "/reset_payments"} RESET PAYMENTS
+    %li.nav-item
+      %a.nav-link{:href => "/gallery"} Gallery
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin'])
+    %li.nav-item.dropdown
+      / Dropdown menu links with the options to pages: reset all the payments and to chage the status of the payment
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Payments
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/reset_payments"} RESET
+        %a.dropdown-item{:href => "/view_children_payments"} CHANGE PAYMENT STATUS
+    %li.nav-item.dropdown
+      / Dropdown menu links with the options to pages: displaying all the users, to add a new user, displaying al coaches, to assign coaches
+      / to a session and a page displaying all the emergency contacts details
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Users
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/user_roles"} ALL USERS
+        %a.dropdown-item{:href => "/add_users"} NEW USER
+        %a.dropdown-item{:href => "/coaches"} ALL COACHES
+        %a.dropdown-item{:href => "/assign_coaches"} ASSIGN COACHES
+        %a.dropdown-item{:href => "/emergency_contacts"} EMERGENCY CONTACTS
+        %a.dropdown-item{:href => "/gallery"} GALLERY
+    %li.nav-item.dropdown
+      / Dropdown menu links with the options to email: Groups, Coaches or a User, or about the expiration details of a document
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Email
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/email_groups"} GROUPS
+        %a.dropdown-item{:href => "/email_coaches", id: 'coachboi'} COACHES
+        %a.dropdown-item{:href => "/email_user"} A USER
+        %a.dropdown-item{:href => "/email_expiration"} ABOUT EXPIRATION DATE
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Welfare Officer'])
+    %li.nav-item
+      / Link to a page displaying all the coaches
+      %a.nav-link{:href => "/coaches"} All Coaches
+    %li.nav-item.dropdown
+      / Dropdown menu links with the options to email: Coaches or about the expiration date of a document
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Email
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/email_coaches", id: 'coachboi'} COACHES
+        %a.dropdown-item{:href => "/email_expiration"} ABOUT EXPIRATION DATE
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  -if Db_queries.check_list_user_roles_smart(user_roles, ['Parent'])
+    %li.nav-item
+      / Link to all the children of a parent
+      %a.nav-link{:href => "/my_children"} Children
+    %li.nav-item
+      %a.nav-link{:href => "/gallery"} Gallery
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Run Leader', 'Volunteer'])
+    %li.nav-item
+      / Link to my account page based on the roles: Run Leader, Volunteer
+      %a.nav-link{:href => "/my_account_coach"} My Account
+  -elsif Db_queries.check_list_user_roles_smart(user_roles, ['Parent'])
+    %li.nav-item
+      / Link to my account page based on the role: Parent
+      %a.nav-link{:href => "/my_account_parent"} My Account
+  -elsif !Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin'])
+    %li.nav-item
+      / Link to my account page based on the roles: any other roles
+      %a.nav-link{:href => "/my_account_users"} My Account
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Head Admin', 'Coach Secretary', 'Member Secretary', 'Run Leader', 'Treasurer', 'Welfare Officer', 'Volunteer'])
+    %li.nav-item
+      /  Link to attendance page
+      %a.nav-link{:href => "/attendance"} Attendance
+
+  / Function to check if the user has any or all the roles from the array
+  / And display the content only if the condition is satisfied
+  - if Db_queries.check_list_user_roles_smart(user_roles, ['Coach Secretary'])
+    %li.nav-item.dropdown
+      / Dropdown menu links with the options to email: Coaches or about the expiration date of a document
+      %a#navbardrop.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#"}
+        Email
+      .dropdown-menu{"aria-labelledby" => "dropdownMenuButton"}
+        %a.dropdown-item{:href => "/email_coaches", id: 'coachboi'} COACHES
+        %a.dropdown-item{:href => "/email_expiration"} ABOUT EXPIRATION DATE
+    %li.nav-item
+      / Link to the page where you can assign Coaches to a session
+      %a.nav-link{:href => "/assign_coaches"} Assign Coaches

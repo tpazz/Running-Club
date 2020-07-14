@@ -1,0 +1,42 @@
+!!!
+-# Contact Us view where a user can send an email to the system owner,
+  providing a valid name, email and message
+%html{:lang => "en"}
+  %head
+  %title Contact us
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    .container
+      .p-3
+      = link_to "◄ Return to Home page", "/", :class => "btn btn-primary rounded-pill"
+
+    .signup-form-con
+      = simple_form_for :email, url: contact_us_sent_path do |f|
+        %h2 Contact us
+        %p
+          %strong Email:
+          thatmail@runningclub.co.uk
+        %p
+          %strong Telephone:
+          07802609080
+        %p
+          %strong Or fill in the form below:
+          %hr/
+          -# Flash error message if error on validation
+          .notice
+            - if flash[:vblank]
+              .notice= flash[:vblank]
+              %br
+          -# Set required fields to false as validation here is done through controller
+          = f.input :name, label: '* Name', :input_html => { :value => @retain_name }, required: false
+          = f.input :mail, label: '* Email', :input_html => { :value => @retain_email }, required: false
+          = f.label :message, '* Message'
+          %br
+          = f.text_area :message, value: @retain_message, required: false
+          %br
+          %br
+          = f.button :submit, "Send", :style => "background-color:black;color:white"

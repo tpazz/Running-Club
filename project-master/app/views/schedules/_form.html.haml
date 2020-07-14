@@ -1,0 +1,22 @@
+-# Form for schedules
+-# frozen_string_literal: true
+= simple_form_for(@schedule) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  -# Field inputs
+  .form-inputs
+    -# Group
+    = f.association :group
+    -# Start time
+    = f.input :start_time
+    -# Session session helper
+    = f.association :session_helper, collection: Db_queries.coaches_all_users(), :label_method => :first_name, :value_method => :id, :input_html => { :multiple => false}
+    -# Location
+    = f.input :location
+    -# Session type
+    = f.input :session_type
+
+  -# Submit the changes with a button click
+  .form-actions
+    = f.button :submit

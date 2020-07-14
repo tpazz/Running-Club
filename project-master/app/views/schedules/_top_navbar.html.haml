@@ -1,0 +1,25 @@
+/ Top navbar, for a visitor
+%nav.navbar.navbar-expand-sm.navbar-dark.navbar-custom.fixed-top
+  / Brand
+  %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+  %ul.navbar-nav.ml-auto
+    / Check if the user is logged in
+    - if user_signed_in?
+      %li.nav-item
+        / Log out button
+        %li{:id => "navbar-logout"}
+          = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+            = fa_icon 'sign-out', text: 'Log out'
+    -else
+      / If only a visitor
+      %li.nav-item.dropdown
+        / Option to get access to more content
+        %a#navbardrop.nav-link.dropdown-toggle{"data-toggle" => "dropdown", :href => "#"} Find here more options
+        .dropdown-menu
+          / Sign Up form
+          %a.dropdown-item{:href => "/signup"} Sign Up
+          / Sign In form
+          %a.dropdown-item{:href => "/login"} Log In
+          / Coach Registration form
+          %a.dropdown-item{:href => "coach_registration"} Coach Registration
+/ End of top navbar

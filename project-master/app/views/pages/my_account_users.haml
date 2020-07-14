@@ -1,0 +1,93 @@
+/ My account page for users that are not a parent or a coach
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title My Account
+  = favicon_link_tag 'favicon.ico'
+  / Link to style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation bar, always fixed at the top of the page
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of navigation
+    / Display the header, using render
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display only the links to pages approved for each type of user
+            =render partial: 'navbar'
+      / End of Navigation Bar
+      .container
+        / Heading
+        %h1{:id => "title"}
+          My Account
+        %hr/
+        .row
+          / Edit form column
+          .col-md-9.personal-info
+            .alert.alert-info.alert-info
+              / Notice message
+              %i.fa.fa-coffee
+              Don't forget to save if you make any
+              %strong changes
+              !
+            / Find the current user
+            - @current_user ||= User.find(session[:user_id])
+            / Create a form
+            %form.form-horizontal{:role => "form"}
+              / First name
+              .form-group
+                %label.col-lg-3.control-label First name:
+                .col-lg-8
+                  %input.form-control{:name => "first_name", :required => "required", :type => "text", :value => @current_user.first_name, data: { remote: true, url: my_account_users_role_path(@current_user), method: :patch } }/
+              / Last name
+              .form-group
+                %label.col-lg-3.control-label Last name:
+                .col-lg-8
+                  %input.form-control{:name => "last_name", :required => "required", :type => "text", :value =>  @current_user.last_name, data: { remote: true, url: my_account_users_role_path(@current_user), method: :patch } }/
+              / Email
+              .form-group
+                %label.col-lg-3.control-label Email:
+                .col-lg-8
+                  %input.form-control{:name => "email", :required => "required", :type =>  @current_user.email, data: { remote: true, url: my_account_users_role_path(@current_user), method: :patch } }/
+              .form-group
+                %input.form-control.invisible{:name => "id", :type => "text", :value => @current_user.id}/
+              / Change Your Password
+              -#.form-group
+                %label.col-lg-6.control-label.font-weight-bold Change Your Password:
+                .col-md-8{:id => "my_acc"}
+                  %button.btn.btn-outline-primary.btn-lg#change-btn{:type => "button", :onclick => "return confirm('Are you sure you want to change your password?')"} Change Password
+              / Delete Your Account
+              -#.form-group
+                %label.col-lg-6.control-label.font-weight-bold Delete Your Account:
+                .col-md-8{:id => "my_acc"}
+                  %button.btn.btn-outline-danger.btn-lg#delete-btn{:type => "button", :onclick => "return confirm('Are you sure you want to delete your account？')"} Delete
+              .form-group
+              %label.col-md-3.control-label
+                .col-md-8{:id => "my_acc"}
+                  / Update Account
+                  %input.btn.btn-primary{:type => "button", :value => "Update Account"}/
+                  / Cancel Option
+                  %a.btn.btn-default.btn-xl{:href => "post_signin"}Cancel
+      %hr/
+    / End of section
+    / Footer
+    = render "layouts/footer"
+    / End of footer

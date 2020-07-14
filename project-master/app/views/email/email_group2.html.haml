@@ -1,0 +1,35 @@
+!!!
+-# Email selected group view where the user can send a message to the group
+%html{:lang => "en"}
+  %head
+  %title Message group
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    -# Logout navbar
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+
+    .signup-form-msg
+      %br
+      %br
+      = simple_form_for :group_email, url: message_group_sent_path do |f|
+        %h3 Send message to: #{@colour} group members
+        = f.label :message
+        %br
+        = f.text_area :message, required: true
+        %br
+        %br
+        -# Hidden fields to pass group colour and group_id to controller for next view
+        = f.hidden_field :group_name, :value => @colour
+        = f.hidden_field :group_id, :value => @group_id
+        = f.button :submit, "Send", id: 'Send', name: "#{@colour}", :style => "background-color:black;color:white"

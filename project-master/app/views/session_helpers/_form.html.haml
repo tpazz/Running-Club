@@ -1,0 +1,16 @@
+-# Form for session helpers
+-# frozen_string_literal: true
+= simple_form_for(@session_helper) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  -# Field inputs
+  .form-inputs
+    -# Schedule
+    = f.association :schedule
+    -# Coach
+    = f.association :coach
+
+  -# Submit the changes with a button click
+  .form-actions
+    = f.button :submit

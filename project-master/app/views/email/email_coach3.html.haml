@@ -1,0 +1,25 @@
+!!!
+-# Email sent view once email has been sent successfully (from email coach)
+%html{:lang => "en"}
+  %head
+  %title Email sent!
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    -# Logout navbar
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+
+    .div
+      %h2 Email sent!
+      %p
+      %a.btn.btn-primary.btn-xl.rounded-pill.mt-5{:href => "/"}Click here to return to the homepage

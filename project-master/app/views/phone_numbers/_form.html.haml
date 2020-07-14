@@ -1,0 +1,16 @@
+-# Form for phone numbers
+-# frozen_string_literal: true
+= simple_form_for(@phone_number) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  -# Input fields
+  .form-inputs
+    -# Parent
+    = f.association :parent
+    -# Parent's phone number
+    = f.input :phone_number
+
+  -# Submit chnages with a button click
+  .form-actions
+    = f.button :submit

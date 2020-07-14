@@ -1,0 +1,87 @@
+/ Show page for a schedule
+!!!
+%html{:lang => "en"}
+  / Head
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        / Brand
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            / Log out button
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / Header
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Ony display the link to pages approved for each type of user
+            =render partial: 'pages/navbar'
+    / Section for displaying the details about a schedule
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-5
+            / Heading
+            %h3= @schedule
+            .table-responsive
+              / Creating a table
+              %table#schedule-table.table.table-hover.table-striped.table-dark
+                %thead.thead-dark
+                  / Columns with titles
+                  %tr
+                    %th ID
+                    %th Group
+                    %th Start time
+                    %th End time
+                    %th Location
+                    %th Coach
+                    %th Session Type
+                    / If a user is allowed to update a schedule, this column will be displayed
+                    - if can? :update, Schedule
+                      %th
+                    / If a user is allowed to destroy a schedule, this column will be displayed
+                    - if can? :destroy, Schedule
+                      %th
+                %tbody
+                  %tr
+                    / Schedule's ID
+                    %td= @schedule.id
+                    / Schedule'S Group with the background color set according to the group's name
+                    %td{:style=> "background-color:  " + Group.find_by_id(@schedule.group_id).group_colour}= Group.find_by_id(@schedule.group_id).group_name
+                    / Start time, day - month - year
+                    %td= @schedule.start_time.strftime("%d/%m/%Y")
+                    / Hour - minutes
+                    %td= @schedule.start_time.strftime("%H:%M")
+                    / Location
+                    %td= @schedule.location
+                    / Session helper
+                    %td= User.find_by_id(Coach.find_by_id((SessionHelper.where(:team_leader => true, :schedule_id => @schedule.id).first.coach_id)).user_id).first_name
+                    / Session type
+                    %td= @schedule.session_type
+                    / If a user is allowed to update a schedule, this row's cell will be displayed
+                    - if can? :update, Schedule
+                      %td= link_to 'Edit', edit_schedule_path(@schedule), :class => "btn btn-secondary rounded-pill"
+                    / If a user is allowed to destroy a schedule, this row's cell will be displayed
+                    - if can? :destroy, Schedule
+                      %td= link_to 'Destroy', @schedule, method: :delete, data: { confirm: 'Are you sure?'}, :class => "btn btn-danger rounded-pill"
+
+/ Footer
+= render "layouts/footer"
+/ End of Footer

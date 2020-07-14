@@ -1,0 +1,38 @@
+!!!
+-# Email selected coach view where the user can send a message along with
+  an attachment to coach
+%html{:lang => "en"}
+  %head
+  %title Message coach
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+    = stylesheet_link_tag    "sign_up", media: :all
+    = javascript_include_tag "application"
+    = csrf_meta_tags
+
+  %body
+    -# Logout navbar
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+
+    .signup-form-msg
+      %br
+      %br
+      = simple_form_for :recipent, html: {multipart: true}, url: message_coach_sent_path do |f|
+        %h3 Send message to: #{@user.first_name} #{@user.last_name}
+        = f.label :message
+        %br
+        = f.text_area :message, required: true
+        %br
+        %br
+        = f.file_field :attachment
+        %br
+        %br
+        -# Hidden field to pass user_id to controller for next view
+        = f.hidden_field :user_id, :value => @user.id
+        = f.button :submit, "Send", :style => "background-color:black;color:white"

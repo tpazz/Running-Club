@@ -1,0 +1,99 @@
+/ Page for displaying all the coaches
+!!!
+%html{:lang => "en"}
+  %head
+  / Title
+  %title Coach
+  = favicon_link_tag 'favicon.ico'
+  / Linking all the style and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation, fixed at the top of the page
+    / Contains the brand name and the log out button
+    %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom.fixed-top
+      .container
+        %a.navbar-brand{:href => "/"} Hope Valley Action Sports
+        %ul.navbar-nav.ml-auto
+          %li.nav-item
+            %li{:id => "navbar-logout"}
+              = link_to destroy_user_session_path, method: :delete, title: "Log out of the system" do
+                = fa_icon 'sign-out', text: 'Log out'
+    / End of the navigation fixed at the top
+    / Display the header using render
+    = render "layouts/header"
+    %section
+      / Navigation Bar
+      %nav.navbar.navbar-expand-lg.navbar-dark.navbar-custom{:id => "nav-det"}
+        .container
+          %button.navbar-toggler{"aria-controls" => "navbarResponsive", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarResponsive", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          #navbarResponsive.collapse.navbar-collapse
+            / Display only the links to pages approved for the user's role
+            =render partial: 'pages/navbar'
+      /End of Navigation
+    - user_roles = current_user.nil? ? nil : current_user.roles.pluck(:role_name)
+    %section
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-5
+            %h1 Listing All The Coaches
+            .table-responsive
+              / Creating a table
+              %table#users-table.table.table-hover.table-striped.table-light
+                %thead.thead-dark
+                  / Columns with titles
+                  %tr
+                  %th First Name
+                  %th Last Name
+                  %th Role
+                  %th Phone Number
+                  %th Change Role
+                  %th Details
+                  / If a user has the permission to update the details of a coach,
+                  / this field will be displayed
+                  - if can? :update, Coach
+                    %th
+                  / If a user has the permission to delete a coach,
+                  / this field will be displayed
+                  - if can? :destroy, Coach
+                    %th
+
+                %tbody
+                  / Rows, containing the information
+                  - @coaches.each do |coach|
+                    %tr
+                      / First name
+                      %td= User.find(coach.user_id).first_name
+                      / Last name
+                      %td= User.find(coach.user_id).last_name
+                      / Roles
+                      %td= User.find(coach.user_id).roles.pluck(:role_name)
+                      / Phone number
+                      %td= coach.telephone
+                      / Link to the edit roles page
+                      %td= link_to 'Role', edit_user_role_path(coach.user_id), :class => "btn btn-outline-secondary rounded-pill"
+                      / Link to the show page
+                      %td= link_to 'Show', coach, :class => "btn btn-outline-primary rounded-pill"
+                      / If a user has the permission to update the details of a coach,
+                      / this field will be displayed
+                      - if can? :update, Coach
+                        %td= link_to 'Edit', edit_coach_path(coach), :class => "btn btn-secondary rounded-pill"
+                      / If a user has the permission to delete a coach,
+                      / this field will be displayed
+                      - if can? :destroy, Coach
+                        %td= link_to 'Destroy', coach, method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-danger rounded-pill"
+
+              %br
+            / If a user has the permission to creat a new coach,
+            / this field will be displayed
+            / Not displayed on this page
+            /- if can? :create, Coach
+            /  = link_to 'New Coach', new_coach_path, {:style => "color: black", :class => "btn"}
+            .p-3
+/ Footer
+= render "layouts/footer"
+/ End of footer

@@ -1,0 +1,11 @@
+/ Edit a session helper page
+%h1 Editing session_helper
+
+/ Display the form
+= render 'form'
+
+/ Link to the show page
+= link_to 'Show', @session_helper
+\|
+/ Option to go back
+= link_to 'Back', session_helpers_path

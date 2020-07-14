@@ -1,0 +1,46 @@
+/ Page for showing the information about a specific coach
+!!!
+%html{:lang => "en"}
+  / Head
+  %head
+  = favicon_link_tag 'favicon.ico'
+  / Link to all the stye and javascript files needed
+  %meta{:content => "text/html; charset=utf-8", "http-equiv" => "content-type"}
+  = stylesheet_link_tag    "application", media: :all
+  = javascript_include_tag "application", media: "bootstrap.min"
+  = csrf_meta_tags
+  %body
+    / Navigation Bar. always fixed at the top of the page
+    = render "schedules/top_navbar"
+    /End of Navigation
+    / Display the header
+    = render "layouts/header"
+    / End of the header
+    %section
+      / Display the Navigation Bar
+      / Only show the links to pages approved for each type of user
+      = render "schedules/navbar_s"
+      .container.align-items-center
+        .row.align-items-center
+          .col-md.mx-auto
+            .p-3
+            / Show a notice message based on the action
+            %h3#notice= notice
+            %p
+              %b First Name:
+              = User.find(@coach.user_id).first_name
+            %p
+              %b Last Name:
+              = User.find(@coach.user_id).last_name
+            %p
+              %b Telephone:
+              = @coach.telephone
+            / Option to go to the edit page
+            = link_to 'Edit', edit_coach_path(@coach), {:style => "color: black", :class => "btn"}
+            \|
+            / Option to go back, using a link
+            = link_to 'Back', coaches_path, {:style => "color: black", :class => "btn"}
+            .p-3
+/ Footer
+= render "layouts/footer"
+/ End of footer
