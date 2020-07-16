@@ -1,4 +1,4 @@
-# RunningClubManagement
+# Running Club Management
 ---
 
 ### Description
@@ -17,7 +17,7 @@ Javascript
 Back-End:
 Postgre - Databases - Sqlite3
 Ruby on rails with various gems. Most importantly:
-Capistrano , Rspec , Factory Bot for Automated Testing
+Capistrano, Rspec, Factory Bot for Automated Testing
 Jquery, Simpleform for user input and form submissions
 
 Devise for the login system
