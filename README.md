@@ -12,7 +12,7 @@ In this Software system, we used a lot of technologies for various tasks, listed
 Front-End:
 HTML, HAML
 CSS, SASS
-JavaScript
+JavaScript.
 
 Back-End:
 Postgre - Databases - Sqlite3
